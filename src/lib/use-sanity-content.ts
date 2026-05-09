@@ -15,6 +15,8 @@ export interface SampleItem {
 export interface SocialItem {
   platform: string;
   url: string;
+  username: string;
+  description: string;
 }
 
 export function useSanityContent() {
@@ -37,7 +39,7 @@ export function useSanityContent() {
           // Samples
           client.fetch<SampleItem[]>(`*[_type == "sample"] | order(_createdAt desc) { title, category }`),
           // Social - could be in profile or separate
-          client.fetch<SocialItem[]>(`*[_type == "profile"][0].social[] { platform, url }`),
+          client.fetch<SocialItem[]>(`*[_type == "profile"][0].social[] { platform, url, username, description }`),
         ]);
 
         console.log("[Sanity] Profile:", JSON.stringify(profileResult, null, 2));

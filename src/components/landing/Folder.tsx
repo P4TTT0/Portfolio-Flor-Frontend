@@ -2,7 +2,9 @@
 
 import type { FolderData } from "@/lib/landing-data";
 import type { DemoItem } from "@/lib/use-sanity-content";
+import type { SocialItem } from "@/lib/use-sanity-content";
 import DemoCard from "@/components/demos/DemoCard";
+import SocialCard from "@/components/social/SocialCard";
 
 interface FolderProps {
   folder: FolderData;
@@ -10,6 +12,7 @@ interface FolderProps {
   allFolders: FolderData[];
   activeIndex: number;
   demos?: DemoItem[];
+  social?: SocialItem[];
 }
 
 const kraftColorMap: Record<string, string> = {
@@ -20,10 +23,12 @@ const kraftColorMap: Record<string, string> = {
   oat: "kraft-oat",
 };
 
-export default function Folder({ folder, onSelect, allFolders, activeIndex, demos }: FolderProps) {
+export default function Folder({ folder, onSelect, allFolders, activeIndex, demos, social }: FolderProps) {
   const hasContent = folder.content && folder.content.trim().length > 0;
   const kraftClass = kraftColorMap[folder.folderColor] || "kraft-oat";
   const isDemosFolder = folder.id === "demos" && demos && demos.length > 0;
+  const isSocialFolder = folder.id === "social" && social && social.length > 0;
+  const needsScroll = isDemosFolder || isSocialFolder;
 
   return (
     <div className="relative w-full h-full">
@@ -31,16 +36,27 @@ export default function Folder({ folder, onSelect, allFolders, activeIndex, demo
       <div
         className={`w-full h-full rounded-b-xl rounded-tr-xl shadow-[3px_8px_30px_rgba(0,0,0,0.12),inset_0_0_40px_rgba(255,255,255,0.05)] border border-[#C9AD86]/20 kraft-texture ${kraftClass} flex flex-col`}
       >
-        <div className={`flex-1 px-6 sm:px-8 md:px-10 py-6 sm:py-8 md:py-10 flex flex-col ${isDemosFolder ? "overflow-y-auto" : ""}`}>
-          <h2 className="font-heading text-lg sm:text-xl md:text-2xl text-text-primary/70 mb-3 sm:mb-5 tracking-tight shrink-0">
+        <div
+          className={`flex-1 min-h-0 flex flex-col ${needsScroll ? "overflow-y-auto folder-scroll" : ""}`}
+          style={{ padding: "0.75rem 1rem" }}
+        >
+          <h2 className="font-heading text-lg sm:text-xl md:text-2xl text-text-primary/70 mb-3 tracking-tight shrink-0">
             {folder.label}
           </h2>
 
           {/* Demos: render DemoCards */}
           {isDemosFolder ? (
-            <div className="flex flex-wrap gap-4 sm:gap-5 md:gap-6 justify-center content-start pt-2">
+            <div className="flex flex-wrap gap-4 sm:gap-5 md:gap-6 justify-start content-start pt-1">
               {demos.map((demo) => (
                 <DemoCard key={demo.title} demo={demo} />
+              ))}
+            </div>
+          ) : isSocialFolder ? (
+            <div className="flex flex-wrap gap-2.5 sm:gap-3 md:gap-4 justify-start content-start pt-1">
+              {social.map((s, i) => (
+                <div key={s.platform || i} className="w-[calc((100%-1.25rem)/3)] sm:w-[calc((100%-1.5rem)/3)] md:w-[calc((100%-2rem)/3)]">
+                  <SocialCard social={s} />
+                </div>
               ))}
             </div>
           ) : hasContent ? (

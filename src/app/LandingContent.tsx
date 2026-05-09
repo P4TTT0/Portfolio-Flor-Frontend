@@ -8,7 +8,7 @@ import landingData from "@/lib/landing-data";
 
 export default function LandingContent() {
   const { data: profile, loading: profileLoading } = useProfile();
-  const { bio, demos, loading: contentLoading } = useSanityContent();
+  const { bio, demos, social, loading: contentLoading } = useSanityContent();
 
   const name = profile?.name || landingData.name;
   const role = profile?.role || landingData.role;
@@ -23,7 +23,7 @@ export default function LandingContent() {
 
   if (profileLoading || contentLoading) {
     return (
-      <div className="h-screen overflow-hidden bg-cream flex items-center justify-center">
+      <div className="h-screen overflow-hidden flex items-center justify-center">
         <span className="font-heading text-xl text-text-secondary/50 tracking-widest">
           Cargando...
         </span>
@@ -32,11 +32,11 @@ export default function LandingContent() {
   }
 
   return (
-    <div className="h-screen overflow-hidden bg-cream flex flex-col">
+    <div className="h-screen overflow-hidden flex flex-col">
       <Header name={name} role={role} />
 
       <main className="flex-1 min-h-0 px-1 sm:px-2 pb-1 flex items-center justify-center">
-        <FolderSystem folders={folders} demos={demos} />
+        <FolderSystem folders={folders} demos={demos} social={social} />
       </main>
     </div>
   );

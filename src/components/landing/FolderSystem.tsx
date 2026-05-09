@@ -3,14 +3,16 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { FolderData } from "@/lib/landing-data";
 import type { DemoItem } from "@/lib/use-sanity-content";
+import type { SocialItem } from "@/lib/use-sanity-content";
 import Folder from "./Folder";
 
 interface FolderSystemProps {
   folders: FolderData[];
   demos: DemoItem[];
+  social: SocialItem[];
 }
 
-export default function FolderSystem({ folders, demos }: FolderSystemProps) {
+export default function FolderSystem({ folders, demos, social }: FolderSystemProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const wheelTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -105,6 +107,7 @@ export default function FolderSystem({ folders, demos }: FolderSystemProps) {
                 allFolders={folders}
                 activeIndex={activeIndex}
                 demos={folder.id === "demos" ? demos : undefined}
+                social={folder.id === "social" ? social : undefined}
               />
             </div>
           );
