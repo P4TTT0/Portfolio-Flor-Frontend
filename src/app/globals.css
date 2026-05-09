@@ -1,26 +1,104 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F5F2EB;
+  --foreground: #3D3D3D;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-sage: #818263;
+  --color-avocado: #C2C395;
+  --color-blush: #DDBAAE;
+  --color-peach: #EFD7CF;
+  --color-oat: #DCD4C1;
+  --color-cream: #F5F2EB;
+  --color-text-primary: #3D3D3D;
+  --color-text-secondary: #6B6B6B;
+  --font-heading: var(--font-playfair);
+  --font-body: var(--font-lato);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes gentle-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* --- Craft textures --- */
+
+.kraft-texture {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(139, 119, 90, 0.04) 2px,
+      rgba(139, 119, 90, 0.04) 4px
+    ),
+    linear-gradient(
+      135deg,
+      var(--kraft-light, #EAD9BF) 0%,
+      var(--kraft-mid, #DECAA8) 25%,
+      var(--kraft-mid2, #E2CDAE) 50%,
+      var(--kraft-dark, #D6BE97) 75%,
+      var(--kraft-darkest, #CBB289) 100%
+    );
+}
+
+/* Folder color variants — kraft base tinted with palette colors */
+.kraft-sage {
+  --kraft-light: #d4d8c4;
+  --kraft-mid: #c8cdb5;
+  --kraft-mid2: #ccd0b9;
+  --kraft-dark: #c0c6ad;
+  --kraft-darkest: #b8bea5;
+}
+
+.kraft-avocado {
+  --kraft-light: #e0e2d0;
+  --kraft-mid: #d6d9c4;
+  --kraft-mid2: #d9dbc7;
+  --kraft-dark: #cfd3bb;
+  --kraft-darkest: #c5caa9;
+}
+
+.kraft-blush {
+  --kraft-light: #e8ddd8;
+  --kraft-mid: #dfd3cc;
+  --kraft-mid2: #e2d6cf;
+  --kraft-dark: #d6c9c0;
+  --kraft-darkest: #cdbfb5;
+}
+
+.kraft-peach {
+  --kraft-light: #ede3df;
+  --kraft-mid: #e5d9d4;
+  --kraft-mid2: #e8dbd7;
+  --kraft-dark: #ddd0ca;
+  --kraft-darkest: #d4c4bc;
+}
+
+.kraft-oat {
+  --kraft-light: #e4ddd2;
+  --kraft-mid: #d9d0c3;
+  --kraft-mid2: #ddd4c7;
+  --kraft-dark: #d0c5b6;
+  --kraft-darkest: #c6b9a8;
+}
+
+.tape-strip {
+  background: linear-gradient(
+    135deg,
+    rgba(245, 242, 235, 0.6) 0%,
+    rgba(245, 242, 235, 0.35) 40%,
+    rgba(245, 242, 235, 0.55) 60%,
+    rgba(245, 242, 235, 0.3) 100%
+  );
+  backdrop-filter: blur(0.5px);
 }
