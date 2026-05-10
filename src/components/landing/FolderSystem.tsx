@@ -47,11 +47,11 @@ export default function FolderSystem({ folders, demos, social }: FolderSystemPro
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full flex items-end justify-center pb-4"
+      className="relative w-full h-full flex items-end justify-center pt-4 pb-2"
       aria-label="Portfolio folders"
     >
       {/* Background rotated folders */}
-      <div className="absolute inset-0 pointer-events-none z-0 flex items-end justify-center pb-4">
+      <div className="absolute inset-0 pointer-events-none z-0 flex items-end justify-center pt-4 pb-2">
         {folders.map((folder, index) => {
           if (index === activeIndex) return null;
           const distance = (index - activeIndex + folders.length) % folders.length;
@@ -75,7 +75,7 @@ export default function FolderSystem({ folders, demos, social }: FolderSystemPro
                 opacity,
                 transform: `rotate(${rotation}deg) translateY(${yOffset}px) scale(${scale})`,
                 zIndex: 5 + distance,
-                width: "min(75vw, 700px)",
+                width: "min(80vw, 750px)",
                 aspectRatio: "1.5 / 1",
               }}
               aria-hidden="true"
@@ -86,8 +86,8 @@ export default function FolderSystem({ folders, demos, social }: FolderSystemPro
 
       {/* Active folder */}
       <div
-        className="relative z-10 w-full max-w-[min(85vw,800px)]"
-        style={{ aspectRatio: "1.5 / 1", maxHeight: "calc(100vh - 120px)" }}
+        className="relative z-10 w-full max-w-[min(80vw,750px)]"
+        style={{ aspectRatio: "1.5 / 1", maxHeight: "calc(100% - 3rem)" }}
       >
         {folders.map((folder, index) => {
           const isActive = index === activeIndex;

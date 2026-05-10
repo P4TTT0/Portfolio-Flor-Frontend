@@ -46,9 +46,11 @@ export default function Folder({ folder, onSelect, allFolders, activeIndex, demo
 
           {/* Demos: render DemoCards */}
           {isDemosFolder ? (
-            <div className="flex flex-wrap gap-4 sm:gap-5 md:gap-6 justify-start content-start pt-1">
+            <div className="flex flex-wrap gap-2.5 sm:gap-3 md:gap-4 justify-start content-start pt-1">
               {demos.map((demo) => (
-                <DemoCard key={demo.title} demo={demo} />
+                <div key={demo.title} className="w-[calc((100%-1.25rem)/3)] sm:w-[calc((100%-1.5rem)/3)] md:w-[calc((100%-2rem)/3)]">
+                  <DemoCard demo={demo} />
+                </div>
               ))}
             </div>
           ) : isSocialFolder ? (

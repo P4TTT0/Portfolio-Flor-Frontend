@@ -35,7 +35,7 @@ export default function LandingContent() {
     <div className="h-screen overflow-hidden flex flex-col">
       <Header name={name} role={role} />
 
-      <main className="flex-1 min-h-0 px-1 sm:px-2 pb-1 flex items-center justify-center">
+      <main className="flex-1 min-h-0 px-1 sm:px-2 pb-2 flex items-end justify-center max-h-[calc(100vh-160px)]">
         <FolderSystem folders={folders} demos={demos} social={social} />
       </main>
     </div>
