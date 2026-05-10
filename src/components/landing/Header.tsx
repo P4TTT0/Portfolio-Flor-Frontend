@@ -1,6 +1,7 @@
 import Clip from "@/components/craft/Clip";
 import Sticker from "@/components/craft/Sticker";
 import Tape from "@/components/craft/Tape";
+import RansomName from "./RansomName";
 
 interface HeaderProps {
   name: string;
@@ -38,10 +39,9 @@ export default function Header({ name, role }: HeaderProps) {
         <span className="block w-12 h-6 sm:w-14 sm:h-7 bg-peach/70 rounded-sm shadow-sm" />
       </div>
 
-      {/* --- Title — smaller to give room to folders --- */}
-      <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl
-        text-text-primary leading-tight tracking-tight">
-        {name}
+      {/* --- Title — ransom name --- */}
+      <h1 className="py-1">
+        <RansomName name={name} />
       </h1>
 
       {/* --- Subtitle --- */}
