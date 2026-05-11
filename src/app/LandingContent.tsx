@@ -1,29 +1,25 @@
 "use client";
 
-import Header from "@/components/landing/Header";
-import FolderSystem from "@/components/landing/FolderSystem";
-import { useProfile } from "@/lib/use-profile";
+import { useRef } from "react";
 import { useSanityContent } from "@/lib/use-sanity-content";
 import landingData from "@/lib/landing-data";
+import HeroSection from "@/components/sections/HeroSection";
+import DemosSection from "@/components/sections/DemosSection";
+import PlaceholderSection from "@/components/sections/PlaceholderSection";
+import SectionNav from "@/components/sections/SectionNav";
 
 export default function LandingContent() {
-  const { data: profileHeader, loading: profileLoading } = useProfile();
-  const { profile, demos, social, loading: contentLoading } = useSanityContent();
+  const containerRef = useRef<HTMLElement>(null);
+  const { profile, demos, social, loading } = useSanityContent();
 
-  const name = profileHeader?.name || profile?.name || landingData.name;
-  const role = profileHeader?.role || profile?.role || landingData.role;
+  const name = profile?.name || landingData.name;
+  const role = profile?.role || landingData.role;
+  const bio = profile?.bio || landingData.folders.find((f) => f.id === "bio")?.content || "";
+  const picture = profile?.picture;
 
-  // Build folders with real Sanity content, fallback to mock
-  const folders = landingData.folders.map((f) => {
-    if (f.id === "bio" && profile?.bio) {
-      return { ...f, content: profile.bio, picture: profile.picture };
-    }
-    return f;
-  });
-
-  if (profileLoading || contentLoading) {
+  if (loading) {
     return (
-      <div className="h-screen overflow-hidden flex items-center justify-center">
+      <div className="h-screen flex items-center justify-center">
         <span className="font-heading text-xl text-text-secondary/50 tracking-widest">
           Cargando...
         </span>
@@ -31,13 +27,32 @@ export default function LandingContent() {
     );
   }
 
-  return (
-    <div className="h-screen overflow-hidden flex flex-col">
-      <Header name={name} role={role} />
+  const sectionIds = ["hero", "demos", "samples", "works"];
+  const sectionLabels = ["Inicio", "Demos", "Samples", "Works"];
 
-      <main className="flex-1 min-h-0 px-1 sm:px-2 pb-2 flex items-end justify-center max-h-[calc(100vh-160px)]">
-        <FolderSystem folders={folders} demos={demos} social={social} bioPicture={profile?.picture} />
+  return (
+    <>
+      <main
+        ref={containerRef}
+        className="snap-y snap-mandatory h-screen overflow-y-auto overflow-x-hidden"
+      >
+        <HeroSection
+          id="hero"
+          name={name}
+          role={role}
+          bio={bio}
+          picture={picture}
+          social={social}
+        />
+        <DemosSection id="demos" demos={demos} />
+        <PlaceholderSection id="samples" label="Samples" color="blush" />
+        <PlaceholderSection id="works" label="Works" color="peach" />
       </main>
-    </div>
+      <SectionNav
+        containerRef={containerRef}
+        sectionIds={sectionIds}
+        labels={sectionLabels}
+      />
+    </>
   );
 }
