@@ -19,7 +19,7 @@ export default function DemosSection({ id, demos }: DemosSectionProps) {
           <h2 className="font-heading text-xl sm:text-2xl text-text-primary/70 mb-4 tracking-tight shrink-0">
             Demos
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 auto-rows-max content-start overflow-y-auto flex-1">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 auto-rows-max content-start flex-1 overflow-hidden">
             {demos.map((demo) => (
               <DemoCard key={demo.title} demo={demo} />
             ))}

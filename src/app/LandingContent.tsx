@@ -3,9 +3,10 @@
 import { useRef } from "react";
 import { useSanityContent } from "@/lib/use-sanity-content";
 import landingData from "@/lib/landing-data";
-import HeroSection from "@/components/sections/HeroSection";
+import BioSection from "@/components/sections/BioSection";
 import DemosSection from "@/components/sections/DemosSection";
 import PlaceholderSection from "@/components/sections/PlaceholderSection";
+import SocialSection from "@/components/sections/SocialSection";
 import SectionNav from "@/components/sections/SectionNav";
 
 export default function LandingContent() {
@@ -27,8 +28,8 @@ export default function LandingContent() {
     );
   }
 
-  const sectionIds = ["hero", "demos", "samples", "works"];
-  const sectionLabels = ["Inicio", "Demos", "Samples", "Works"];
+  const sectionIds = ["bio", "demos", "samples", "works", "social"];
+  const sectionLabels = ["Bio", "Demos", "Samples", "Works", "Social"];
 
   return (
     <>
@@ -36,17 +37,11 @@ export default function LandingContent() {
         ref={containerRef}
         className="snap-y snap-mandatory h-screen overflow-y-auto overflow-x-hidden"
       >
-        <HeroSection
-          id="hero"
-          name={name}
-          role={role}
-          bio={bio}
-          picture={picture}
-          social={social}
-        />
+        <BioSection id="bio" name={name} role={role} bio={bio} picture={picture} />
         <DemosSection id="demos" demos={demos} />
         <PlaceholderSection id="samples" label="Samples" color="blush" />
         <PlaceholderSection id="works" label="Works" color="peach" />
+        <SocialSection id="social" social={social} />
       </main>
       <SectionNav
         containerRef={containerRef}
