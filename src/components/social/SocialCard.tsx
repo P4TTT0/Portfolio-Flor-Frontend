@@ -2,16 +2,18 @@
 
 import type { SocialItem } from "@/lib/use-sanity-content";
 import { getPlatformConfig } from "@/lib/platform-config";
-import { randomRotation } from "@/lib/youtube-utils";
 
 interface SocialCardProps {
   social: SocialItem;
+  index: number;
 }
 
-export default function SocialCard({ social }: SocialCardProps) {
+export default function SocialCard({ social, index }: SocialCardProps) {
   const config = getPlatformConfig(social.platform);
-  const rotation = randomRotation(-3, 3);
   const Icon = config.icon;
+
+  // Alternating rotation: even = 1.6deg, odd = -1.6deg
+  const rotation = index % 2 === 0 ? 1.6 : -1.6;
 
   return (
     <a
@@ -22,17 +24,6 @@ export default function SocialCard({ social }: SocialCardProps) {
       style={{ transform: `rotate(${rotation}deg)` }}
       aria-label={`Visitar perfil de ${social.platform}`}
     >
-      {/* Washi tape — positioned ABOVE the card */}
-      <div
-        className="relative mx-auto w-9 h-3 rounded-sm z-20"
-        style={{
-          backgroundColor: config.accent,
-          opacity: 0.3,
-          backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 2px, ${config.accent}22 2px, ${config.accent}22 4px)`,
-          marginBottom: "-4px",
-        }}
-      />
-
       {/* Post-it card — fixed height, fills column width */}
       <div
         className="relative w-full rounded-sm shadow-[3px_4px_14px_rgba(0,0,0,0.15)] transition-[filter] duration-200 group-hover:brightness-95 flex flex-col"
