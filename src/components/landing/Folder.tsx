@@ -5,6 +5,7 @@ import type { DemoItem } from "@/lib/use-sanity-content";
 import type { SocialItem } from "@/lib/use-sanity-content";
 import DemoCard from "@/components/demos/DemoCard";
 import SocialCard from "@/components/social/SocialCard";
+import BioCard from "@/components/bio/BioCard";
 
 interface FolderProps {
   folder: FolderData;
@@ -13,6 +14,7 @@ interface FolderProps {
   activeIndex: number;
   demos?: DemoItem[];
   social?: SocialItem[];
+  bioPicture?: string | null;
 }
 
 const kraftColorMap: Record<string, string> = {
@@ -23,12 +25,13 @@ const kraftColorMap: Record<string, string> = {
   oat: "kraft-oat",
 };
 
-export default function Folder({ folder, onSelect, allFolders, activeIndex, demos, social }: FolderProps) {
+export default function Folder({ folder, onSelect, allFolders, activeIndex, demos, social, bioPicture }: FolderProps) {
   const hasContent = folder.content && folder.content.trim().length > 0;
   const kraftClass = kraftColorMap[folder.folderColor] || "kraft-oat";
   const isDemosFolder = folder.id === "demos" && demos && demos.length > 0;
   const isSocialFolder = folder.id === "social" && social && social.length > 0;
-  const needsScroll = isDemosFolder || isSocialFolder;
+  const isBioFolder = folder.id === "bio" && hasContent;
+  const needsScroll = isDemosFolder || isSocialFolder || isBioFolder;
 
   return (
     <div className="relative w-full h-full">
@@ -45,7 +48,9 @@ export default function Folder({ folder, onSelect, allFolders, activeIndex, demo
           </h2>
 
           {/* Demos: render DemoCards */}
-          {isDemosFolder ? (
+          {isBioFolder ? (
+            <BioCard bio={folder.content} picture={bioPicture} />
+          ) : isDemosFolder ? (
             <div className="flex flex-wrap gap-2.5 sm:gap-3 md:gap-4 justify-start content-start pt-1">
               {demos.map((demo) => (
                 <div key={demo.title} className="w-[calc((100%-1.25rem)/3)] sm:w-[calc((100%-1.5rem)/3)] md:w-[calc((100%-2rem)/3)]">
@@ -57,7 +62,7 @@ export default function Folder({ folder, onSelect, allFolders, activeIndex, demo
             <div className="flex flex-wrap gap-2.5 sm:gap-3 md:gap-4 justify-start content-start pt-1">
               {social.map((s, i) => (
                 <div key={s.platform || i} className="w-[calc((100%-1.25rem)/3)] sm:w-[calc((100%-1.5rem)/3)] md:w-[calc((100%-2rem)/3)]">
-                  <SocialCard social={s} />
+                  <SocialCard social={s} index={i} />
                 </div>
               ))}
             </div>

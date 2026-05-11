@@ -10,9 +10,10 @@ interface FolderSystemProps {
   folders: FolderData[];
   demos: DemoItem[];
   social: SocialItem[];
+  bioPicture?: string | null;
 }
 
-export default function FolderSystem({ folders, demos, social }: FolderSystemProps) {
+export default function FolderSystem({ folders, demos, social, bioPicture }: FolderSystemProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const wheelTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -108,6 +109,7 @@ export default function FolderSystem({ folders, demos, social }: FolderSystemPro
                 activeIndex={activeIndex}
                 demos={folder.id === "demos" ? demos : undefined}
                 social={folder.id === "social" ? social : undefined}
+                bioPicture={folder.id === "bio" ? bioPicture : undefined}
               />
             </div>
           );

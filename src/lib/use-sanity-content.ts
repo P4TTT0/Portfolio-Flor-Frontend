@@ -19,8 +19,15 @@ export interface SocialItem {
   description: string;
 }
 
+export interface ProfileData {
+  name: string;
+  role: string;
+  bio: string | null;
+  picture: string | null;
+}
+
 export function useSanityContent() {
-  const [bio, setBio] = useState<string | null>(null);
+  const [profile, setProfile] = useState<ProfileData | null>(null);
   const [demos, setDemos] = useState<DemoItem[]>([]);
   const [samples, setSamples] = useState<SampleItem[]>([]);
   const [social, setSocial] = useState<SocialItem[]>([]);
@@ -32,13 +39,13 @@ export function useSanityContent() {
     async function fetchAll() {
       try {
         const [profileResult, demosResult, samplesResult, socialResult] = await Promise.all([
-          // Profile - fetch all fields
-          client.fetch(`*[_type == "profile"][0]`),
+          // Profile - fetch all fields including picture
+          client.fetch(`*[_type == "profile"][0] { name, role, bio, "picture": picture.asset->url }`),
           // Demos
           client.fetch<DemoItem[]>(`*[_type == "demo"] | order(_createdAt desc) { title, category, videoUrl }`),
           // Samples
           client.fetch<SampleItem[]>(`*[_type == "sample"] | order(_createdAt desc) { title, category }`),
-          // Social - could be in profile or separate
+          // Social
           client.fetch<SocialItem[]>(`*[_type == "profile"][0].social[] { platform, url, username, description }`),
         ]);
 
@@ -48,9 +55,12 @@ export function useSanityContent() {
         console.log("[Sanity] Social:", socialResult);
 
         if (!cancelled) {
-          // Bio from profile (try multiple field names)
-          const bioText = profileResult?.bio || profileResult?.biography || profileResult?.description || null;
-          setBio(bioText);
+          setProfile(profileResult ? {
+            name: profileResult.name || null,
+            role: profileResult.role || null,
+            bio: profileResult.bio || null,
+            picture: profileResult.picture || null,
+          } : null);
           setDemos(demosResult || []);
           setSamples(samplesResult || []);
           setSocial(socialResult || []);
@@ -66,8 +76,8 @@ export function useSanityContent() {
     }
 
     fetchAll();
-    return () => { cancelled = true; };
+    return () => { cancelled = true };
   }, []);
 
-  return { bio, demos, samples, social, loading };
+  return { profile, demos, samples, social, loading };
 }
