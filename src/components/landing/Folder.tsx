@@ -15,6 +15,7 @@ interface FolderProps {
   demos?: DemoItem[];
   social?: SocialItem[];
   bioPicture?: string | null;
+  bioOverflow?: boolean;
 }
 
 const kraftColorMap: Record<string, string> = {
@@ -25,13 +26,13 @@ const kraftColorMap: Record<string, string> = {
   oat: "kraft-oat",
 };
 
-export default function Folder({ folder, onSelect, allFolders, activeIndex, demos, social, bioPicture }: FolderProps) {
+export default function Folder({ folder, onSelect, allFolders, activeIndex, demos, social, bioPicture, bioOverflow }: FolderProps) {
   const hasContent = folder.content && folder.content.trim().length > 0;
   const kraftClass = kraftColorMap[folder.folderColor] || "kraft-oat";
   const isDemosFolder = folder.id === "demos" && demos && demos.length > 0;
   const isSocialFolder = folder.id === "social" && social && social.length > 0;
   const isBioFolder = folder.id === "bio" && hasContent;
-  const needsScroll = isDemosFolder || isSocialFolder || isBioFolder;
+  const needsScroll = (isDemosFolder || isSocialFolder || (hasContent && !isBioFolder));
 
   return (
     <div className="relative w-full h-full">
@@ -40,7 +41,13 @@ export default function Folder({ folder, onSelect, allFolders, activeIndex, demo
         className={`w-full h-full rounded-b-xl rounded-tr-xl shadow-[3px_8px_30px_rgba(0,0,0,0.12),inset_0_0_40px_rgba(255,255,255,0.05)] border border-[#C9AD86]/20 kraft-texture ${kraftClass} flex flex-col`}
       >
         <div
-          className={`flex-1 min-h-0 flex flex-col ${needsScroll ? "overflow-y-auto folder-scroll" : ""}`}
+          className={`flex-1 min-h-0 flex flex-col ${
+            bioOverflow
+              ? "overflow-visible"
+              : needsScroll
+                ? "overflow-y-auto folder-scroll"
+                : ""
+          }`}
           style={{ padding: "0.75rem 1rem" }}
         >
           <h2 className="font-heading text-lg sm:text-xl md:text-2xl text-text-primary/70 mb-3 tracking-tight shrink-0">

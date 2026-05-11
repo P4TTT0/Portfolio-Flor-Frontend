@@ -110,6 +110,7 @@ export default function FolderSystem({ folders, demos, social, bioPicture }: Fol
                 demos={folder.id === "demos" ? demos : undefined}
                 social={folder.id === "social" ? social : undefined}
                 bioPicture={folder.id === "bio" ? bioPicture : undefined}
+                bioOverflow={folder.id === "bio"}
               />
             </div>
           );

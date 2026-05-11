@@ -6,53 +6,66 @@ interface BioCardProps {
 }
 
 /**
- * BioCard — CSS-only ruled notebook paper.
+ * BioCard — CSS-only scrapbook composition with 7 layered elements.
  *
- * Replaces the old bio-paper.png <img> with a layered CSS background:
- *  1. repeating-linear-gradient for horizontal ruled lines (28px spacing)
- *  2. linear-gradient for the red left margin line
- *  3. linear-gradient for subtle paper texture
+ * Visual clusters:
+ *  1. Paper stack at top-left held by bulldog clip (z-10 to z-20)
+ *  2. Polaroid frame with profile photo at bottom-right attached by paper clip (z-25 to z-30)
  *
- * Paper is positioned at bottom-left (80% width) with a slight rotation
- * and drop shadow for the handmade scrapbook aesthetic. Text line-height
- * matches the 28px gradient step so bio text aligns on the ruled lines.
+ * Only the bio text scrolls (bio-paper-scroll); all decorative elements
+ * remain fixed so they protrude outside the folder body naturally.
+ *
+ * Assets: /assets/elements/bulldog-clip.png, polaroid-frame.png, clip.png
  */
 export default function BioCard({ bio, picture }: BioCardProps) {
   return (
-    <div className="relative w-full flex-1 min-h-0 flex flex-col justify-end items-start">
-      {/* Profile picture — behind the bio paper, on the folder layer */}
-      {picture && (
-        <div
-          className="absolute z-10"
-          style={{
-            top: "12%",
-            right: "12%",
-            width: "26%",
-            maxWidth: "130px",
-            aspectRatio: "1 / 1",
-          }}
-        >
-          <img
-            src={picture}
-            alt="Foto de perfil"
-            className="w-full h-full object-cover rounded-sm"
-            style={{
-              transform: "rotate(3deg)",
-              boxShadow: "2px 3px 8px rgba(0,0,0,0.2)",
-            }}
-          />
-        </div>
-      )}
-
-      {/* CSS-only ruled paper — bottom-left via flex layout, 80% width, content-driven height */}
-      {/* Uses flex justify-end/items-start instead of absolute positioning so paper */}
-      {/* stays in flow — overflow triggers Folder scrollbar naturally for long bios. */}
+    <div className="relative w-full flex-1 min-h-0 overflow-visible">
+      {/* ── Back paper top (protrudes above bio paper) ── */}
       <div
-        className="z-20"
+        className="absolute"
         style={{
-          width: "80%",
-          transform: "rotate(-1.2deg)",
-          transformOrigin: "bottom left",
+          zIndex: 10,
+          left: "6%",
+          top: "4%",
+          width: "62%",
+          height: "62%",
+          background: "linear-gradient(135deg, #F5F2EB 0%, #EDE6D8 100%)",
+          transform: "rotate(2deg)",
+          transformOrigin: "top left",
+          boxShadow: "2px 3px 10px rgba(0,0,0,0.12)",
+        }}
+        aria-hidden="true"
+      />
+
+      {/* ── Back paper bottom (protrudes below bio paper) ── */}
+      <div
+        className="absolute"
+        style={{
+          zIndex: 10,
+          left: "4%",
+          top: "12%",
+          width: "62%",
+          height: "62%",
+          background: "linear-gradient(135deg, #F0EBDF 0%, #E8E0D0 100%)",
+          transform: "rotate(-1.5deg)",
+          transformOrigin: "top left",
+          boxShadow: "2px 3px 10px rgba(0,0,0,0.10)",
+        }}
+        aria-hidden="true"
+      />
+
+      {/* ── Bio paper (ruled sheet, top layer of paper stack) ── */}
+      {/* Ruled lines: repeating-linear-gradient (28px step) + red margin line + paper base */}
+      <div
+        className="absolute flex flex-col"
+        style={{
+          zIndex: 15,
+          left: "5%",
+          top: "8%",
+          width: "65%",
+          maxHeight: "70%",
+          transform: "rotate(-0.5deg)",
+          transformOrigin: "top left",
           boxShadow: "2px 3px 10px rgba(0,0,0,0.15)",
           background: `
             repeating-linear-gradient(
@@ -78,13 +91,85 @@ export default function BioCard({ bio, picture }: BioCardProps) {
           padding: "18px 18px 16px 40px",
         }}
       >
-        <p
-          className="font-body text-xs sm:text-sm md:text-base text-neutral-800 whitespace-pre-line"
-          style={{ lineHeight: "28px" }}
-        >
-          {bio}
-        </p>
+        {/* ── Scrollable bio text area (only this scrolls, not the composition) ── */}
+        <div className="bio-paper-scroll overflow-y-auto flex-1 min-h-0">
+          <p
+            className="font-body text-xs sm:text-sm md:text-base text-neutral-800 whitespace-pre-line"
+            style={{ lineHeight: "28px" }}
+          >
+            {bio}
+          </p>
+        </div>
       </div>
+
+      {/* ── Bulldog clip — anchors paper stack at top-left ── */}
+      <img
+        src="/assets/elements/bulldog-clip.png"
+        alt=""
+        className="absolute pointer-events-none"
+        style={{
+          zIndex: 20,
+          left: "1%",
+          top: "3%",
+          width: "12%",
+          maxWidth: "80px",
+          transformOrigin: "top left",
+          filter: "drop-shadow(1px 2px 3px rgba(0,0,0,0.2))",
+        }}
+        aria-hidden="true"
+      />
+
+      {/* ── Profile photo — behind polaroid frame, visible through hollow center ── */}
+      {picture && (
+        <img
+          src={picture}
+          alt="Foto de perfil"
+          className="absolute object-cover rounded-sm"
+          style={{
+            zIndex: 25,
+            right: "4%",
+            bottom: "4%",
+            width: "14%",
+            maxWidth: "110px",
+            aspectRatio: "1 / 1",
+            boxShadow: "1px 2px 4px rgba(0,0,0,0.1)",
+          }}
+        />
+      )}
+
+      {/* ── Polaroid frame — bottom-right, protrudes outside folder boundary ── */}
+      <img
+        src="/assets/elements/polaroid-frame.png"
+        alt=""
+        className="absolute pointer-events-none"
+        style={{
+          zIndex: 30,
+          right: "-1%",
+          bottom: "-3%",
+          width: "22%",
+          maxWidth: "160px",
+          transform: "rotate(3deg)",
+          filter: "drop-shadow(2px 4px 8px rgba(0,0,0,0.15))",
+        }}
+        aria-hidden="true"
+      />
+
+      {/* ── Paper clip — bottom-right edge, visually attaches polaroid to folder ── */}
+      <img
+        src="/assets/elements/clip.png"
+        alt=""
+        className="absolute pointer-events-none"
+        style={{
+          zIndex: 30,
+          right: "0%",
+          bottom: "6%",
+          width: "10%",
+          maxWidth: "50px",
+          transform: "rotate(15deg)",
+          filter: "drop-shadow(1px 2px 3px rgba(0,0,0,0.15))",
+        }}
+        aria-hidden="true"
+      />
     </div>
   );
 }
