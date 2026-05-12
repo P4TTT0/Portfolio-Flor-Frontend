@@ -15,6 +15,7 @@ export default function DemoCard({ demo }: DemoCardProps) {
   const videoId = extractYouTubeId(demo.videoUrl);
   const thumbnail = videoId ? getYouTubeThumbnail(videoId) : null;
   const rotation = randomRotation(-3, 3);
+  const clipRotation = randomRotation(-8, 8);
 
   if (!videoId) return null;
 
@@ -27,16 +28,16 @@ export default function DemoCard({ demo }: DemoCardProps) {
         style={{ transform: `rotate(${rotation}deg)` }}
         aria-label={`Ver demo: ${demo.title}`}
       >
-        {/* Wooden clip — attaches card to rope */}
+        {/* Wooden clip — attaches card to rope with random rotation */}
         <img
           src="/assets/elements/wooden-clip.png"
           alt=""
-          className="absolute z-20 pointer-events-none"
+          className="absolute z-30 pointer-events-none"
           style={{
-            top: "-14px",
+            top: "-18px",
             left: "50%",
-            transform: "translateX(-50%)",
-            width: "32px",
+            transform: `translateX(-50%) rotate(${clipRotation}deg)`,
+            width: "36px",
             height: "auto",
           }}
           aria-hidden="true"
