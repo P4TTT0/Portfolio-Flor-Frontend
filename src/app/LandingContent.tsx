@@ -29,7 +29,7 @@ export default function LandingContent() {
   }
 
   const sectionIds = ["bio", "demos", "samples", "works", "social"];
-  const sectionLabels = ["Bio", "Demos", "Samples", "Works", "Social"];
+  const sectionLabels = ["Bio", "Demos", "Samples", "Works", "Redes"];
 
   return (
     <>
