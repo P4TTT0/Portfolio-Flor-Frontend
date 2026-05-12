@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import type { DemoItem } from "@/lib/use-sanity-content";
-import Tape from "@/components/craft/Tape";
 import VideoPopup from "./VideoPopup";
 import { extractYouTubeId, getYouTubeThumbnail, randomRotation } from "@/lib/youtube-utils";
 
@@ -21,7 +20,6 @@ export default function DemoCard({ demo }: DemoCardProps) {
 
   return (
     <>
-      {/* Post-it card */}
       <button
         type="button"
         onClick={() => setIsOpen(true)}
@@ -29,10 +27,20 @@ export default function DemoCard({ demo }: DemoCardProps) {
         style={{ transform: `rotate(${rotation}deg)` }}
         aria-label={`Ver demo: ${demo.title}`}
       >
-        {/* Tape at the top */}
-        <div className="absolute -top-2 left-1/2 -translate-x-1/2 z-20">
-          <Tape width="36px" rotation={randomRotation(-5, 5)} />
-        </div>
+        {/* Wooden clip — attaches card to rope */}
+        <img
+          src="/assets/elements/wooden-clip.png"
+          alt=""
+          className="absolute z-20 pointer-events-none"
+          style={{
+            top: "-14px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "32px",
+            height: "auto",
+          }}
+          aria-hidden="true"
+        />
 
         {/* Card body */}
         <div className="relative w-44 sm:w-48 md:w-52 bg-white rounded-sm shadow-[2px_3px_12px_rgba(0,0,0,0.15)] overflow-hidden border border-neutral-200/50">

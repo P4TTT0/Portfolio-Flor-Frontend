@@ -10,21 +10,29 @@ interface DemosSectionProps {
 
 export default function DemosSection({ id, demos }: DemosSectionProps) {
   return (
-    <section id={id} className="snap-start h-screen flex items-center justify-center p-4 sm:p-6 md:p-8">
-      <div
-        className="w-full max-w-[min(85vw,1000px)] rounded-b-xl rounded-tr-xl shadow-[3px_8px_30px_rgba(0,0,0,0.12)] border border-[#C9AD86]/20 kraft-texture kraft-avocado flex flex-col"
-        style={{ maxHeight: "calc(100vh - 3rem)" }}
-      >
-        <div className="p-4 sm:p-6 flex-1 flex flex-col min-h-0">
-          <h2 className="font-heading text-xl sm:text-2xl text-text-primary/70 mb-4 tracking-tight shrink-0">
-            Demos
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 auto-rows-max content-start flex-1 overflow-hidden">
-            {demos.map((demo) => (
-              <DemoCard key={demo.title} demo={demo} />
-            ))}
-          </div>
-        </div>
+    <section id={id} className="snap-start h-screen flex flex-col items-center justify-center relative overflow-hidden">
+      {/* Top rope */}
+      <img
+        src="/assets/elements/rope.png"
+        alt=""
+        className="absolute top-8 sm:top-12 left-0 w-full h-auto pointer-events-none z-10"
+        aria-hidden="true"
+      />
+
+      {/* Bottom rope — mirrored */}
+      <img
+        src="/assets/elements/rope.png"
+        alt=""
+        className="absolute bottom-8 sm:bottom-12 left-0 w-full h-auto pointer-events-none z-10"
+        style={{ transform: "scaleX(-1) scaleY(-1)" }}
+        aria-hidden="true"
+      />
+
+      {/* Demo cards hanging between ropes */}
+      <div className="relative z-20 flex flex-wrap justify-center gap-6 sm:gap-8 md:gap-10 px-4 sm:px-8 max-w-[min(90vw,1100px)]">
+        {demos.map((demo) => (
+          <DemoCard key={demo.title} demo={demo} />
+        ))}
       </div>
     </section>
   );
