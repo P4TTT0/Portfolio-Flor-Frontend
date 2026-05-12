@@ -20,11 +20,21 @@ export default function SocialSection({ id, social }: SocialSectionProps) {
               role="tab"
               aria-selected
               tabIndex={0}
-              className="relative px-5 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 font-heading text-sm sm:text-base md:text-lg font-semibold tracking-wide border-0 cursor-pointer rounded-t-lg rounded-b-sm kraft-texture kraft-oat text-text-primary"
+              className="relative px-5 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 font-heading text-sm sm:text-base md:text-lg font-semibold tracking-wide border-0 cursor-pointer text-text-primary"
               style={{
                 zIndex: 25,
                 boxShadow: "none",
-                marginBottom: "-1px",
+                borderRadius: "10px 10px 0 0",
+                background: `
+                  repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(139, 119, 90, 0.04) 2px,
+                    rgba(139, 119, 90, 0.04) 4px
+                  ),
+                  #e4ddd2
+                `,
               }}
             >
               Redes sociales
@@ -32,7 +42,19 @@ export default function SocialSection({ id, social }: SocialSectionProps) {
           </div>
 
           <div
-            className="w-full h-full rounded-b-xl rounded-tr-xl shadow-[3px_8px_30px_rgba(0,0,0,0.12)] border border-[#C9AD86]/20 border-t-0 kraft-texture kraft-oat flex flex-col"
+            className="w-full h-full rounded-b-xl rounded-tr-xl shadow-[3px_8px_30px_rgba(0,0,0,0.12)] border border-[#C9AD86]/20 border-t-0 flex flex-col"
+            style={{
+              background: `
+                repeating-linear-gradient(
+                  0deg,
+                  transparent,
+                  transparent 2px,
+                  rgba(139, 119, 90, 0.04) 2px,
+                  rgba(139, 119, 90, 0.04) 4px
+                ),
+                #e4ddd2
+              `,
+            }}
           >
             <div className="flex-1 min-h-0 flex flex-col overflow-y-auto folder-scroll p-3 sm:p-4">
               <div className="flex flex-wrap gap-2.5 sm:gap-3 md:gap-4 justify-start content-start">
