@@ -56,7 +56,7 @@ export default function SocialSection({ id, social }: SocialSectionProps) {
               `,
             }}
           >
-            <div className="flex-1 min-h-0 flex flex-col overflow-y-auto folder-scroll p-3 sm:p-4">
+            <div className="flex-1 min-h-0 flex flex-col overflow-y-auto folder-scroll p-8 sm:p-10 md:p-12">
               <div className="flex flex-wrap gap-2.5 sm:gap-3 md:gap-4 justify-start content-start">
                 {social.map((s, i) => (
                   <div key={s.platform || i} className="w-[calc((100%-1.25rem)/3)] sm:w-[calc((100%-1.5rem)/3)] md:w-[calc((100%-2rem)/3)]">
