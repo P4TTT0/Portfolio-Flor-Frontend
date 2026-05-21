@@ -4,18 +4,20 @@ import { useState } from "react";
 import Image from "next/image";
 import type { DemoItem } from "@/lib/use-sanity-content";
 import VideoPopup from "./VideoPopup";
-import { extractYouTubeId, getYouTubeThumbnail, randomRotation } from "@/lib/youtube-utils";
+import { extractYouTubeId, getYouTubeThumbnail } from "@/lib/youtube-utils";
 
 interface DemoCardProps {
   demo: DemoItem;
+  index: number;
 }
 
-export default function DemoCard({ demo }: DemoCardProps) {
+export default function DemoCard({ demo, index }: DemoCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const videoId = extractYouTubeId(demo.videoUrl);
   const thumbnail = videoId ? getYouTubeThumbnail(videoId) : null;
-  const rotation = randomRotation(-3, 3);
-  const clipRotation = randomRotation(-8, 8);
+
+  // Alternating rotation: even = 1.6deg, odd = -1.6deg (same as Social section)
+  const rotation = index % 2 === 0 ? 1.6 : -1.6;
 
   if (!videoId) return null;
 
@@ -28,23 +30,23 @@ export default function DemoCard({ demo }: DemoCardProps) {
         style={{ transform: `rotate(${rotation}deg)` }}
         aria-label={`Ver demo: ${demo.title}`}
       >
-        {/* Wooden clip — attaches card to rope with random rotation */}
+        {/* Pin — attaches card to cork board */}
         <img
-          src="/assets/elements/wooden-clip.png"
+          src="/assets/elements/pin.png"
           alt=""
           className="absolute z-30 pointer-events-none"
           style={{
-            top: "-18px",
+            top: "-14px",
             left: "50%",
-            transform: `translateX(-50%) rotate(${clipRotation}deg)`,
-            width: "36px",
+            transform: "translateX(-50%)",
+            width: "28px",
             height: "auto",
           }}
           aria-hidden="true"
         />
 
         {/* Card body */}
-        <div className="relative w-44 sm:w-48 md:w-52 bg-white rounded-sm shadow-[2px_3px_12px_rgba(0,0,0,0.15)] overflow-hidden border border-neutral-200/50">
+        <div className="relative w-full bg-white rounded-sm shadow-[2px_3px_12px_rgba(0,0,0,0.15)] overflow-hidden border border-neutral-200/50">
           {/* Thumbnail */}
           <div className="relative aspect-video bg-neutral-100 overflow-hidden">
             {thumbnail && (

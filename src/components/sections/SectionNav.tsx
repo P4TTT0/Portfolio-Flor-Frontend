@@ -10,6 +10,7 @@ interface SectionNavProps {
 
 export default function SectionNav({ containerRef, sectionIds, labels }: SectionNavProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -57,31 +58,70 @@ export default function SectionNav({ containerRef, sectionIds, labels }: Section
 
   return (
     <nav
-      className="fixed right-3 sm:right-5 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3"
+      className="fixed right-3 sm:right-5 top-1/2 -translate-y-1/2 z-50"
       aria-label="Navegación de secciones"
     >
-      {labels.map((label, i) => (
-        <button
-          key={sectionIds[i]}
-          type="button"
-          onClick={() => scrollTo(i)}
-          onKeyDown={(e) => handleKeyDown(e, i)}
-          className="group flex items-center gap-2.5"
-          aria-label={`Ir a ${label}`}
-          aria-current={i === activeIndex ? "true" : undefined}
-        >
-          <span className="font-body text-xs text-text-secondary/60 group-hover:text-text-secondary/90 transition-colors hidden sm:inline leading-none">
-            {label}
-          </span>
-          <span
-            className={`block w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-              i === activeIndex
-                ? "bg-sage scale-125 shadow-md"
-                : "bg-text-secondary/25 hover:bg-text-secondary/40"
-            }`}
-          />
-        </button>
-      ))}
+      {/* Track line — subtle vertical guide */}
+      <div
+        className="absolute left-[5px] top-1 bottom-1 w-px bg-text-secondary/10 rounded-full"
+        aria-hidden="true"
+      />
+
+      {/* Progress line — fills from top to active dot */}
+      <div
+        className="absolute left-[5px] top-[5px] w-px bg-sage/40 rounded-full transition-all duration-500 ease-out"
+        style={{
+          height: `${(activeIndex / Math.max(labels.length - 1, 1)) * 100}%`,
+        }}
+        aria-hidden="true"
+      />
+
+      <div className="flex flex-col items-center gap-4 sm:gap-5 relative">
+        {labels.map((label, i) => {
+          const isActive = i === activeIndex;
+          const isHovered = i === hoveredIndex;
+
+          return (
+            <button
+              key={sectionIds[i]}
+              type="button"
+              onClick={() => scrollTo(i)}
+              onKeyDown={(e) => handleKeyDown(e, i)}
+              onMouseEnter={() => setHoveredIndex(i)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              onFocus={() => setHoveredIndex(i)}
+              onBlur={() => setHoveredIndex(null)}
+              className="group relative flex items-center justify-center"
+              aria-label={`Ir a ${label}`}
+              aria-current={isActive ? "true" : undefined}
+            >
+              {/* Tooltip label — appears on hover/active */}
+              <span
+                className={`absolute right-full mr-3 whitespace-nowrap font-body text-xs font-medium tracking-wide px-2.5 py-1 rounded-md transition-all duration-200 pointer-events-none ${
+                  isActive
+                    ? "opacity-100 bg-sage/10 text-sage translate-x-0"
+                    : isHovered
+                      ? "opacity-100 bg-neutral-900/80 text-white translate-x-0"
+                      : "opacity-0 translate-x-2"
+                }`}
+              >
+                {label}
+              </span>
+
+              {/* Dot */}
+              <span
+                className={`block rounded-full transition-all duration-300 ease-out ${
+                  isActive
+                    ? "w-3 h-3 bg-sage shadow-[0_0_0_3px_rgba(129,130,99,0.2)]"
+                    : isHovered
+                      ? "w-2.5 h-2.5 bg-text-secondary/50"
+                      : "w-2 h-2 bg-text-secondary/25 hover:bg-text-secondary/40"
+                }`}
+              />
+            </button>
+          );
+        })}
+      </div>
     </nav>
   );
 }

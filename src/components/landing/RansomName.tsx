@@ -7,9 +7,24 @@ interface RansomNameProps {
   name: string;
 }
 
-// Cache of discovered variant counts per letter key
+// Known variant counts per letter key — updated manually when new letter files are added.
 // e.g. { "e": 3, "e-up": 1, "f": 2 }
-const variantCache = new Map<string, number>();
+// No probing needed — zero 404s.
+const KNOWN_VARIANTS: Record<string, number> = {
+  "a": 1,
+  "a-up": 1,
+  "c": 1,
+  "d": 1,
+  "e": 2,
+  "f": 1,
+  "f-up": 1,
+  "i": 1,
+  "l": 1,
+  "n": 1,
+  "o": 1,
+  "r": 1,
+  "v": 1,
+};
 
 function getLetterKey(char: string): string {
   const lower = char.toLowerCase();
@@ -22,29 +37,9 @@ function getLetterFile(char: string, variant: number): string {
   return `/assets/letters/${lower}-${variant}${suffix}.png`;
 }
 
-// Probe how many variants exist for a given letter by trying to load them
-function probeVariants(char: string): Promise<number> {
+function getVariantCount(char: string): number {
   const key = getLetterKey(char);
-  if (variantCache.has(key)) return Promise.resolve(variantCache.get(key)!);
-
-  return new Promise((resolve) => {
-    let count = 0;
-
-    function tryNext(variant: number) {
-      const img = new Image();
-      img.onload = () => {
-        count = variant;
-        tryNext(variant + 1);
-      };
-      img.onerror = () => {
-        variantCache.set(key, count);
-        resolve(count);
-      };
-      img.src = getLetterFile(char, variant);
-    }
-
-    tryNext(1);
-  });
+  return KNOWN_VARIANTS[key] ?? 0;
 }
 
 function generateStyles(name: string) {
@@ -58,7 +53,6 @@ export default function RansomName({ name }: RansomNameProps) {
   const [letterStyles] = useState(() => generateStyles(name));
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
-  const [probed, setProbed] = useState(false);
 
   // Auto-scale to fit container width
   useEffect(() => {
@@ -83,21 +77,9 @@ export default function RansomName({ name }: RansomNameProps) {
     return () => observer.disconnect();
   }, [name]);
 
-  // Probe all unique letter keys in the name
-  useEffect(() => {
-    const uniqueKeys = new Set(name.split("").map(getLetterKey));
-    const probes = Array.from(uniqueKeys).map((key) => {
-      const char = key.endsWith("-up") ? key.replace("-up", "").toUpperCase() : key[0];
-      return probeVariants(char);
-    });
-
-    Promise.all(probes).then(() => setProbed(true));
-  }, [name]);
-
   const pickVariant = useCallback((char: string): string | null => {
-    const key = getLetterKey(char);
-    const count = variantCache.get(key);
-    if (!count || count < 1) return null;
+    const count = getVariantCount(char);
+    if (count < 1) return null;
 
     const variant = Math.floor(Math.random() * count) + 1;
     return getLetterFile(char, variant);
@@ -120,7 +102,7 @@ export default function RansomName({ name }: RansomNameProps) {
         {words.map((word, wi) => (
           <span key={wi} className="inline-flex items-center">
             {word.split("").map((char, i) => {
-              const imgSrc = probed ? pickVariant(char) : null;
+              const imgSrc = pickVariant(char);
               const style = letterStyles[
                 words.slice(0, wi).reduce((sum, w) => sum + w.length + 1, 0) + i
               ];
