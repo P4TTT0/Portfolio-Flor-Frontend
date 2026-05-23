@@ -8,7 +8,6 @@ import DemosSection from "@/components/sections/DemosSection";
 import PlaceholderSection from "@/components/sections/PlaceholderSection";
 import SocialSection from "@/components/sections/SocialSection";
 import SectionNav from "@/components/sections/SectionNav";
-import StickersParallax from "@/components/parallax/StickersParallax";
 
 export default function LandingContent() {
   const containerRef = useRef<HTMLElement>(null);
@@ -34,7 +33,6 @@ export default function LandingContent() {
 
   return (
     <>
-      <StickersParallax containerRef={containerRef} />
       <main
         ref={containerRef}
         className="snap-y snap-mandatory h-screen overflow-y-auto overflow-x-hidden"
