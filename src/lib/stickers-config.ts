@@ -1,5 +1,7 @@
-// Sticker configuration — add new stickers here as they're added to public/assets/elements/
-// Each sticker is assigned to a parallax layer (A, B, or C)
+// Sticker configuration — distributed across entire scroll height
+// Layer A: Background (static, speed 0)
+// Layer B: Mid-ground (very slow, small movement)
+// Layer C: Foreground (almost static, very large, strong blur)
 
 export type ParallaxLayer = "A" | "B" | "C";
 
@@ -13,95 +15,95 @@ export interface StickerConfig {
 }
 
 export const STICKERS: StickerConfig[] = [
-  // Layer A — Background (no blur, normal scroll speed)
+  // Layer A — Background (STATIC, speed 0, no blur)
   {
-    src: "/assets/elements/stars.png",
+    src: "/assets/stickers/radio.png",
     layer: "A",
     position: "left",
-    top: "15%",
-    rotation: -12,
-    size: 80,
-  },
-  {
-    src: "/assets/elements/paper.png",
-    layer: "A",
-    position: "right",
-    top: "35%",
-    rotation: 8,
+    top: "10%",
+    rotation: -8,
     size: 90,
   },
   {
-    src: "/assets/elements/clip.png",
-    layer: "A",
-    position: "left",
-    top: "65%",
-    rotation: 15,
-    size: 60,
-  },
-  {
-    src: "/assets/elements/bulldog-clip.png",
+    src: "/assets/stickers/megaphone.png",
     layer: "A",
     position: "right",
-    top: "85%",
-    rotation: -10,
-    size: 70,
+    top: "30%",
+    rotation: 12,
+    size: 85,
+  },
+  {
+    src: "/assets/stickers/bunny-face.png",
+    layer: "A",
+    position: "left",
+    top: "55%",
+    rotation: -5,
+    size: 80,
+  },
+  {
+    src: "/assets/stickers/hashtag-one.png",
+    layer: "A",
+    position: "right",
+    top: "75%",
+    rotation: 10,
+    size: 75,
   },
 
-  // Layer B — Mid-ground (light blur, slower scroll)
+  // Layer B — Mid-ground (very slow, small movement, light blur)
   {
-    src: "/assets/elements/polaroid-frame.png",
+    src: "/assets/stickers/yellow-heart.png",
     layer: "B",
     position: "right",
     top: "20%",
-    rotation: -6,
-    size: 100,
+    rotation: -10,
+    size: 120,
   },
   {
-    src: "/assets/elements/wooden-clip.png",
+    src: "/assets/stickers/two-stars.png",
     layer: "B",
     position: "left",
     top: "45%",
-    rotation: 12,
-    size: 75,
-  },
-  {
-    src: "/assets/elements/pin.png",
-    layer: "B",
-    position: "right",
-    top: "70%",
-    rotation: -8,
-    size: 65,
-  },
-
-  // Layer C — Foreground (strong blur, slowest scroll)
-  {
-    src: "/assets/elements/paper-star.png",
-    layer: "C",
-    position: "left",
-    top: "25%",
-    rotation: 18,
+    rotation: 15,
     size: 110,
   },
   {
-    src: "/assets/elements/headphones.png",
+    src: "/assets/stickers/multiple-starts.png",
+    layer: "B",
+    position: "right",
+    top: "65%",
+    rotation: -12,
+    size: 115,
+  },
+
+  // Layer C — Foreground (almost static, VERY large, strong blur)
+  {
+    src: "/assets/stickers/headphones.png",
+    layer: "C",
+    position: "left",
+    top: "15%",
+    rotation: 18,
+    size: 220,
+  },
+  {
+    src: "/assets/stickers/blakc-star.png",
     layer: "C",
     position: "right",
-    top: "55%",
+    top: "50%",
     rotation: -14,
-    size: 120,
+    size: 200,
   },
 ];
 
-// Parallax speed multipliers
+// Parallax speed multipliers (relative to scroll)
 export const LAYER_SPEEDS: Record<ParallaxLayer, number> = {
-  A: 1.0,    // Normal speed (1:1 with scroll)
-  B: 0.6,    // 60% of scroll speed
-  C: 0.3,    // 30% of scroll speed
+  A: 0,      // Static (stuck to background)
+  B: 0.12,   // Very slow (12% of scroll speed)
+  C: 0.03,   // Almost static (3% of scroll speed)
 };
 
 // Blur values per layer
 export const LAYER_BLURS: Record<ParallaxLayer, string> = {
   A: "none",
-  B: "blur(1px)",
-  C: "blur(3px)",
+  B: "blur(1.5px)",
+  C: "blur(4px)",
 };
