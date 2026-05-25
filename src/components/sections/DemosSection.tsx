@@ -12,6 +12,9 @@ interface DemosSectionProps {
 export default function DemosSection({ id, demos }: DemosSectionProps) {
   return (
     <section id={id} className="snap-start h-screen flex items-center justify-center relative overflow-hidden">
+      {/* Solid background — full viewport height */}
+      <div className="absolute inset-0 bg-avocado" aria-hidden="true" />
+
       {/* Pizarra container — centered, fills most of the viewport */}
       <div className="relative w-full max-w-[min(88vw,1050px)] px-2 sm:px-4">
         {/* Pizarra background image */}
