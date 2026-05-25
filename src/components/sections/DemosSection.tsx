@@ -40,22 +40,6 @@ export default function DemosSection({ id, demos }: DemosSectionProps) {
           aria-hidden="true"
         />
 
-        {/* Headphones decoration — centered on bottom-left corner, half in half out */}
-        <img
-          src="/assets/elements/headphones.png"
-          alt=""
-          className="absolute pointer-events-none"
-          style={{
-            bottom: 0,
-            left: 0,
-            transform: "translate(-50%, 50%)",
-            width: "80px",
-            height: "auto",
-            zIndex: 20,
-          }}
-          aria-hidden="true"
-        />
-
         {/* Grid overlay — positioned inside the cork area (inset from frame) */}
         <div
           className="absolute grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 items-start content-start"
