@@ -29,7 +29,7 @@ export function getYouTubeThumbnail(videoId: string): string {
  * Get YouTube embed URL for iframe.
  */
 export function getYouTubeEmbedUrl(videoId: string): string {
-  return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+  return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&showinfo=0&controls=1`;
 }
 
 /**

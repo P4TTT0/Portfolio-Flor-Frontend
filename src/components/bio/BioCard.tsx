@@ -19,16 +19,16 @@ interface BioCardProps {
  */
 export default function BioCard({ bio, picture }: BioCardProps) {
   return (
-    <div className="relative w-full flex-1 min-h-0 overflow-visible">
+    <div className="relative w-full flex-1 min-h-0 overflow-visible" style={{height: "80%"}}>
       {/* ── Paper background — large, slightly rotated left, text centered ── */}
       <div
         className="absolute flex items-center justify-center"
         style={{
           zIndex: 40,
-          left: "-9%",
+          left: "-2%",
           top: "-8%",
           width: "100%",
-          height: "105%",
+          height: "125%",
           transform: "rotate(-3deg)",
           transformOrigin: "center center",
         }}
@@ -53,9 +53,9 @@ export default function BioCard({ bio, picture }: BioCardProps) {
           <p
             className="font-body whitespace-pre-line"
             style={{
-              color: "rgb(94 94 94)",
+              color: "rgb(94, 94, 94)",
               lineHeight: "1.9",
-              fontSize: "21px",
+              fontSize: "17px",
               textAlign: "justify",
             }}
           >
@@ -70,13 +70,13 @@ export default function BioCard({ bio, picture }: BioCardProps) {
         alt=""
         className="absolute pointer-events-none"
         style={{
-          zIndex: 50,
-          right: "13%",
+          zIndex: 52,
+          right: "27%",
           bottom: "31%",
           width: "18%",
           maxWidth: "100px",
           transform: "rotate(-26deg)",
-          filter: "drop-shadow(1px 2px 3px rgba(0,0,0,0.15))",
+          filter: "drop-shadow(rgba(0, 0, 0, 0.15) 1px 2px 3px)",
         }}
         aria-hidden="true"
       />
@@ -88,14 +88,14 @@ export default function BioCard({ bio, picture }: BioCardProps) {
           alt="Foto de perfil"
           className="absolute object-cover rounded-sm"
           style={{
-            zIndex: 25,
-            right: "-3%",
-            bottom: "2%",
+            zIndex: 49,
+            right: "14%",
+            bottom: "4%",
             width: "24%",
             maxWidth: "167px",
             aspectRatio: "1 / 1",
             transform: "rotate(8deg)",
-            boxShadow: "1px 2px 4px rgba(0,0,0,0.1)",
+            boxShadow: "rgba(0, 0, 0, 0.1) 1px 2px 4px",
           }}
         />
       )}
@@ -106,13 +106,13 @@ export default function BioCard({ bio, picture }: BioCardProps) {
         alt=""
         className="absolute pointer-events-none"
         style={{
-          zIndex: 30,
-          right: "-4%",
-          bottom: "-9%",
+          zIndex: 50,
+          right: "13%",
+          bottom: "-8%",
           width: "29%",
           maxWidth: "180px",
           transform: "rotate(8deg)",
-          filter: "drop-shadow(2px 4px 8px rgba(0,0,0,0.15))",
+          filter: "drop-shadow(rgba(0, 0, 0, 0.15) 2px 4px 8px)",
         }}
         aria-hidden="true"
       />
@@ -123,13 +123,13 @@ export default function BioCard({ bio, picture }: BioCardProps) {
         alt=""
         className="absolute pointer-events-none"
         style={{
-          zIndex: 30,
-          right: "-4%",
-          bottom: "28%",
+          zIndex: 60,
+          right: "13%",
+          bottom: "32%",
           width: "10%",
           maxWidth: "50px",
           transform: "rotate(15deg)",
-          filter: "drop-shadow(1px 2px 3px rgba(0,0,0,0.15))",
+          filter: "drop-shadow(rgba(0, 0, 0, 0.15) 1px 2px 3px)",
         }}
         aria-hidden="true"
       />
