@@ -13,6 +13,13 @@ export interface LandingData {
   folders: FolderData[];
 }
 
+export interface SampleData {
+  title: string;
+  category: string;
+  audioUrl: string;
+  duration?: number;
+}
+
 export const landingData: LandingData = {
   name: "Florencia Acevedo",
   role: "Locutora Nacional",
@@ -60,5 +67,68 @@ export const landingData: LandingData = {
     },
   ],
 };
+
+export const SAMPLES_DATA: SampleData[] = [
+  {
+    title: "Voz Institucional",
+    category: "Institucional",
+    audioUrl: "/samples/voz-institucional.mp3",
+    duration: 45,
+  },
+  {
+    title: "Presentación Corporativa",
+    category: "Institucional",
+    audioUrl: "/samples/presentacion-corporativa.mp3",
+    duration: 60,
+  },
+  {
+    title: "Spot Publicitario",
+    category: "Comercial",
+    audioUrl: "/samples/spot-publicitario.mp3",
+    duration: 30,
+  },
+  {
+    title: "Cuña Radial",
+    category: "Comercial",
+    audioUrl: "/samples/cuna-radial.mp3",
+    duration: 20,
+  },
+  {
+    title: "Relato Documental",
+    category: "Narración",
+    audioUrl: "/samples/relato-documental.mp3",
+    duration: 90,
+  },
+  {
+    title: "Cuento Infantil",
+    category: "Narración",
+    audioUrl: "/samples/cuento-infantil.mp3",
+    duration: 75,
+  },
+  {
+    title: "Conducción de Eventos",
+    category: "Eventos",
+    audioUrl: "/samples/conduccion-eventos.mp3",
+    duration: 55,
+  },
+  {
+    title: "Ceremonia Protocolar",
+    category: "Eventos",
+    audioUrl: "/samples/ceremonia-protocolar.mp3",
+    duration: 40,
+  },
+  {
+    title: "Mensaje de Bienvenida",
+    category: "Institucional",
+    audioUrl: "/samples/mensaje-bienvenida.mp3",
+    duration: 25,
+  },
+  {
+    title: "Jingle Publicitario",
+    category: "Comercial",
+    audioUrl: "/samples/jingle-publicitario.mp3",
+    duration: 15,
+  },
+];
 
 export default landingData;

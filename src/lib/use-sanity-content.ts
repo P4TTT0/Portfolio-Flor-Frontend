@@ -10,6 +10,8 @@ export interface DemoItem {
 export interface SampleItem {
   title: string;
   category: string;
+  audioUrl: string;
+  duration?: number;
 }
 
 export interface SocialItem {
@@ -44,7 +46,7 @@ export function useSanityContent() {
           // Demos
           client.fetch<DemoItem[]>(`*[_type == "demo"] | order(_createdAt desc) { title, category, videoUrl }`),
           // Samples
-          client.fetch<SampleItem[]>(`*[_type == "sample"] | order(_createdAt desc) { title, category }`),
+          client.fetch<SampleItem[]>(`*[_type == "sample"] | order(_createdAt desc) { title, category, "audioUrl": audioFile.asset->url, duration }`),
           // Social
           client.fetch<SocialItem[]>(`*[_type == "profile"][0].social[] { platform, url, username, description }`),
         ]);
@@ -62,7 +64,10 @@ export function useSanityContent() {
             picture: profileResult.picture || null,
           } : null);
           setDemos(demosResult || []);
-          setSamples(samplesResult || []);
+          setSamples((samplesResult || []).map((s) => ({
+            ...s,
+            audioUrl: s.audioUrl || "",
+          })));
           setSocial(socialResult || []);
         }
       } catch (err: unknown) {
