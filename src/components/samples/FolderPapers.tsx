@@ -60,7 +60,7 @@ export default function FolderPapers({
   if (categories.length === 0) return null;
 
   return (
-    <div className="relative w-full max-w-[min(80vw,700px)]">
+    <div className="relative w-full max-w-[min(80vw,700px)] z-50">
       <div
         className="relative flex flex-col"
         style={{

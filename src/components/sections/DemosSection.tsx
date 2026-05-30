@@ -3,6 +3,7 @@
 import Image from "next/image";
 import type { DemoItem } from "@/lib/use-sanity-content";
 import DemoCard from "@/components/demos/DemoCard";
+import SectionTitleOverlay from "@/components/ui/SectionTitleOverlay";
 
 interface DemosSectionProps {
   id: string;
@@ -16,7 +17,7 @@ export default function DemosSection({ id, demos }: DemosSectionProps) {
       <div className="absolute inset-0 bg-avocado" aria-hidden="true" />
 
       {/* Pizarra container — centered, fills most of the viewport */}
-      <div className="relative w-full max-w-[min(88vw,1050px)] px-2 sm:px-4">
+      <div className="relative w-full max-w-[min(88vw,1050px)] px-2 sm:px-4" style={{ zIndex: 50 }}>
         {/* Pizarra background image */}
         <Image
           src="/assets/elements/pizarra.png"
@@ -58,6 +59,12 @@ export default function DemosSection({ id, demos }: DemosSectionProps) {
           ))}
         </div>
       </div>
+
+      <SectionTitleOverlay
+        title="DEMOS"
+        textColor="#3D3D3D"
+        effect="marquee"
+      />
     </section>
   );
 }

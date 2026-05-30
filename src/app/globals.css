@@ -18,11 +18,41 @@
   --color-text-secondary: #6B6B6B;
   --font-heading: var(--font-playfair);
   --font-body: var(--font-lato);
+  --font-archivo-black: var(--font-archivo-black);
+  --font-league-spartan: var(--font-league-spartan);
+  --font-cormorant-garamond: var(--font-cormorant-garamond);
 }
 
 @keyframes gentle-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
+}
+
+@keyframes section-title-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.section-title-float {
+  animation: section-title-float 2s ease-in-out infinite;
+}
+
+@keyframes marquee-ltr {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
+@keyframes marquee-rtl {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-ltr {
+  animation: marquee-ltr 20s linear infinite;
+}
+
+.marquee-rtl {
+  animation: marquee-rtl 20s linear infinite;
 }
 
 body {

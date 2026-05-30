@@ -7,6 +7,7 @@ import TrackList from "@/components/samples/TrackList";
 import WaveformPlayer, {
   type WaveformPlayerHandle,
 } from "@/components/samples/WaveformPlayer";
+import SectionTitleOverlay from "@/components/ui/SectionTitleOverlay";
 
 // ---------------------------------------------------------------------------
 // SamplesSection
@@ -195,6 +196,11 @@ export default function SamplesSection({
           onPlayStateChange={handlePlayStateChange}
         />
       </FolderPapers>
+
+      <SectionTitleOverlay
+        title="SAMPLES"
+        textColor="#3D3D3D"
+      />
     </section>
   );
 }
