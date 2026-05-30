@@ -2,8 +2,7 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import type { SampleItem } from "@/lib/use-sanity-content";
-import Notebook from "@/components/samples/Notebook";
-import CategoryTabs from "@/components/samples/CategoryTabs";
+import FolderPapers from "@/components/samples/FolderPapers";
 import TrackList from "@/components/samples/TrackList";
 import WaveformPlayer, {
   type WaveformPlayerHandle,
@@ -173,14 +172,11 @@ export default function SamplesSection({
       {/* Solid background — full viewport height */}
       <div className="absolute inset-0 bg-blush" aria-hidden="true" />
 
-      <Notebook>
-        {/* Tabs — sticky notes at edges */}
-        <CategoryTabs
-          categories={categories}
-          activeCategory={activeCategory}
-          onTabChange={handleTabChange}
-        />
-
+      <FolderPapers
+        categories={categories}
+        activeCategory={activeCategory}
+        onTabChange={handleTabChange}
+      >
         {/* Track list */}
         <TrackList
           tracks={filteredTracks}
@@ -198,7 +194,7 @@ export default function SamplesSection({
           audioUrl={activeTrackUrl}
           onPlayStateChange={handlePlayStateChange}
         />
-      </Notebook>
+      </FolderPapers>
     </section>
   );
 }
