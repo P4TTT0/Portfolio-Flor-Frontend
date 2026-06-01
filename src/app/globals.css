@@ -55,6 +55,27 @@
   animation: marquee-rtl 20s linear infinite;
 }
 
+/* Wiggle animation for handwritten effect */
+@keyframes wiggle-handwritten {
+  0%, 100% { 
+    transform: rotate(-0.5deg) translateY(0px);
+  }
+  25% { 
+    transform: rotate(0.3deg) translateY(-1px);
+  }
+  50% { 
+    transform: rotate(-0.2deg) translateY(0.5px);
+  }
+  75% { 
+    transform: rotate(0.4deg) translateY(-0.5px);
+  }
+}
+
+.wiggle-handwritten {
+  animation: wiggle-handwritten 3s ease-in-out infinite;
+  transform-origin: center;
+}
+
 body {
   color: var(--foreground);
   background-color: var(--background);

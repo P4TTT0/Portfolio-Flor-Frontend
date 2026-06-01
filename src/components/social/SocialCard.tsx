@@ -24,34 +24,34 @@ export default function SocialCard({ social, index }: SocialCardProps) {
       style={{ transform: `rotate(${rotation}deg)` }}
       aria-label={`Visitar perfil de ${social.platform}`}
     >
-      {/* Post-it card — fixed height, fills column width */}
+      {/* Post-it card — large, centered */}
       <div
-        className="relative w-full rounded-sm shadow-[3px_4px_14px_rgba(0,0,0,0.15)] transition-[filter] duration-200 group-hover:brightness-95 flex flex-col"
+        className="relative w-full rounded-sm shadow-[6px_8px_24px_rgba(0,0,0,0.2)] transition-[filter] duration-200 group-hover:brightness-95 flex flex-col"
         style={{
           backgroundColor: config.bg,
-          height: "170px",
+          height: "480px",
         }}
       >
         {/* Card content */}
-        <div className="px-3 sm:px-4 pt-2 pb-3 flex flex-col flex-1">
+        <div className="px-8 sm:px-10 pt-6 pb-8 flex flex-col flex-1">
           {/* Header: Icon + Platform name */}
-          <div className="flex items-start gap-2.5 mb-1.5">
+          <div className="flex items-start gap-4 mb-4">
             {/* Icon box */}
             <div
-              className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
+              className="w-16 h-16 rounded-lg flex items-center justify-center shrink-0"
               style={{ backgroundColor: config.accent }}
             >
-              <Icon className="w-4 h-4 text-white" />
+              <Icon className="w-8 h-8 text-white" />
             </div>
 
             {/* Platform name + username */}
             <div className="min-w-0">
-              <p className="font-body text-sm font-bold text-neutral-900 leading-tight truncate">
+              <p className="font-body text-2xl font-bold text-neutral-900 leading-tight truncate">
                 {social.platform}
               </p>
               {social.username && (
                 <p
-                  className="font-body text-xs font-semibold truncate mt-0.5"
+                  className="font-body text-lg font-semibold truncate mt-1"
                   style={{ color: config.accent }}
                 >
                   {social.username}
@@ -62,20 +62,20 @@ export default function SocialCard({ social, index }: SocialCardProps) {
 
           {/* Dotted separator */}
           <div
-            className="border-t border-dotted my-1.5"
+            className="border-t border-dotted my-4"
             style={{ borderColor: `${config.accent}33` }}
           />
 
           {/* Description */}
           {social.description && (
-            <p className="font-body text-xs text-neutral-700 leading-snug line-clamp-2 mb-auto">
+            <p className="font-body text-base text-neutral-700 leading-relaxed line-clamp-4 mb-auto">
               {social.description}
             </p>
           )}
 
           {/* CTA */}
           <p
-            className="font-body text-xs font-semibold mt-auto pt-1"
+            className="font-body text-lg font-semibold mt-auto pt-4"
             style={{ color: config.accent }}
           >
             Visitar &rarr;

@@ -6,7 +6,7 @@ interface SectionTitleOverlayProps {
   title: string;
   duration?: number;
   textColor?: string;
-  effect?: "layered" | "marquee";
+  effect?: "layered" | "marquee" | "wiggle";
 }
 
 export default function SectionTitleOverlay({
@@ -97,6 +97,39 @@ export default function SectionTitleOverlay({
         >
           <div className="marquee-rtl font-cormorant-garamond font-bold text-[3vw] tracking-tight whitespace-nowrap" style={{ color: textColor }}>
             {repeatedText}
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  // Wiggle effect for Redes (handwritten style)
+  if (effect === "wiggle") {
+    return (
+      <>
+        <span ref={sectionRef as React.RefObject<HTMLSpanElement>} className="hidden" aria-hidden="true" />
+        
+        <div
+          className="absolute inset-0 flex items-start justify-center pointer-events-none"
+          style={{ 
+            zIndex: 100, 
+            opacity: isVisible ? 1 : 0,
+            transition: isFadingOut ? 'opacity 700ms ease-in-out' : 'none',
+            display: isVisible || isFadingOut ? 'flex' : 'none',
+            paddingTop: '0.5vh'
+          }}
+        >
+          <div className="wiggle-handwritten">
+            <h2
+              className="font-heading font-black tracking-tight whitespace-nowrap"
+              style={{
+                color: textColor,
+                fontSize: `calc(100vw / ${title.length * 0.6})`
+              }}
+              aria-hidden="true"
+            >
+              {title}
+            </h2>
           </div>
         </div>
       </>
