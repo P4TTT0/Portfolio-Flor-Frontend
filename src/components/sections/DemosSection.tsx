@@ -61,9 +61,7 @@ export default function DemosSection({ id, demos }: DemosSectionProps) {
       </div>
 
       <SectionTitleOverlay
-        title="DEMOS"
-        textColor="#3D3D3D"
-        effect="marquee"
+        imageSrc="/assets/animated/demos-title.png"
       />
     </section>
   );

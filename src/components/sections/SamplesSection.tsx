@@ -198,8 +198,7 @@ export default function SamplesSection({
       </FolderPapers>
 
       <SectionTitleOverlay
-        title="SAMPLES"
-        textColor="#3D3D3D"
+        imageSrc="/assets/animated/muestras-title.png"
       />
     </section>
   );
