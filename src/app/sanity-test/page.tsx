@@ -121,7 +121,7 @@ export default function SchemaTestPage() {
             <div className="space-y-2">
               {data.map((doc, i) => (
                 <div
-                  key={doc._id || i}
+                  key={String(doc._id ?? i)}
                   className="p-4 bg-white dark:bg-neutral-900 rounded-lg border border-neutral-100 dark:border-neutral-800"
                 >
                   {activeSchema?.displayFields.map((field) => (
