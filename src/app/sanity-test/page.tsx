@@ -124,14 +124,24 @@ export default function SchemaTestPage() {
                   key={String(doc._id ?? i)}
                   className="p-4 bg-white dark:bg-neutral-900 rounded-lg border border-neutral-100 dark:border-neutral-800"
                 >
-                  {activeSchema?.displayFields.map((field) => (
-                    <div key={field} className="flex gap-4 py-1">
-                      <span className="text-xs font-mono text-neutral-400 w-24">{field}</span>
-                      <span className="text-sm text-neutral-900 dark:text-neutral-50">
-                        {doc[field] || "—"}
-                      </span>
-                    </div>
-                  ))}
+                  {activeSchema?.displayFields.map((field) => {
+                    const value = doc[field];
+                    const displayValue = 
+                      value == null 
+                        ? "—" 
+                        : typeof value === "object" 
+                          ? JSON.stringify(value) 
+                          : String(value);
+                    
+                    return (
+                      <div key={field} className="flex gap-4 py-1">
+                        <span className="text-xs font-mono text-neutral-400 w-24">{field}</span>
+                        <span className="text-sm text-neutral-900 dark:text-neutral-50">
+                          {displayValue}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               ))}
             </div>
