@@ -28,54 +28,6 @@
   50% { transform: translateY(-4px); }
 }
 
-@keyframes section-title-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
-.section-title-float {
-  animation: section-title-float 2s ease-in-out infinite;
-}
-
-@keyframes marquee-ltr {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0%); }
-}
-
-@keyframes marquee-rtl {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
-}
-
-.marquee-ltr {
-  animation: marquee-ltr 20s linear infinite;
-}
-
-.marquee-rtl {
-  animation: marquee-rtl 20s linear infinite;
-}
-
-/* Wiggle animation for handwritten effect */
-@keyframes wiggle-handwritten {
-  0%, 100% { 
-    transform: rotate(-0.5deg) translateY(0px);
-  }
-  25% { 
-    transform: rotate(0.3deg) translateY(-1px);
-  }
-  50% { 
-    transform: rotate(-0.2deg) translateY(0.5px);
-  }
-  75% { 
-    transform: rotate(0.4deg) translateY(-0.5px);
-  }
-}
-
-.wiggle-handwritten {
-  animation: wiggle-handwritten 3s ease-in-out infinite;
-  transform-origin: center;
-}
-
 body {
   color: var(--foreground);
   background-color: var(--background);
