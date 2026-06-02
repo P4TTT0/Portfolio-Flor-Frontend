@@ -59,10 +59,10 @@ export default function RansomName({ name }: RansomNameProps) {
     const container = containerRef.current;
     if (!container) return;
 
-    const observer = new ResizeObserver(() => {
-      const parent = container.parentElement;
-      if (!parent) return;
+    const parent = container.parentElement;
+    if (!parent) return;
 
+    const observer = new ResizeObserver(() => {
       const parentWidth = parent.clientWidth - 32;
       const contentWidth = container.scrollWidth;
 
@@ -73,7 +73,7 @@ export default function RansomName({ name }: RansomNameProps) {
       }
     });
 
-    observer.observe(container.parentElement);
+    observer.observe(parent);
     return () => observer.disconnect();
   }, [name]);
 
