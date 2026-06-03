@@ -29,9 +29,6 @@ export default function LandingContent() {
     );
   }
 
-  const sectionIds = ["bio", "demos", "samples", "works", "social"];
-  const sectionLabels = ["Bio", "Demos", "Samples", "Works", "Redes"];
-
   return (
     <>
       <main
@@ -44,11 +41,7 @@ export default function LandingContent() {
         <PlaceholderSection id="works" label="Works" color="peach" />
         <SocialSection id="social" social={social} />
       </main>
-      <SectionNav
-        containerRef={containerRef}
-        sectionIds={sectionIds}
-        labels={sectionLabels}
-      />
+      <SectionNav containerRef={containerRef} />
     </>
   );
 }
