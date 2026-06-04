@@ -5,19 +5,30 @@ import Image from "next/image";
 import type { DemoItem } from "@/lib/use-sanity-content";
 import VideoPopup from "./VideoPopup";
 import { extractYouTubeId, getYouTubeThumbnail } from "@/lib/youtube-utils";
+import useBreakpoint from "@/hooks/useBreakpoint";
 
 interface DemoCardProps {
   demo: DemoItem;
   index: number;
 }
 
+// Pin dimensions in design-canvas pixels (scales naturally via parent transform)
+const PIN_WIDTH = 28;
+const PIN_TOP = -22;
+
 export default function DemoCard({ demo, index }: DemoCardProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { isMobile } = useBreakpoint();
   const videoId = extractYouTubeId(demo.videoUrl);
   const thumbnail = videoId ? getYouTubeThumbnail(videoId) : null;
 
-  // Alternating rotation: even = 1.6deg, odd = -1.6deg (same as Social section)
+  // Alternating rotation: even = 1.6deg, odd = -1.6deg
   const rotation = index % 2 === 0 ? 1.6 : -1.6;
+
+  // Touch target: ensure minimum 44×44 CSS pixels
+  // At small scales the card itself shrinks; pin stays fixed px in design canvas
+  // The button's intrinsic size + the card body already exceed 44×44 at base canvas
+  const touchTargetStyles = isMobile ? { minWidth: 44, minHeight: 44 } : {};
 
   if (!videoId) return null;
 
@@ -27,19 +38,22 @@ export default function DemoCard({ demo, index }: DemoCardProps) {
         type="button"
         onClick={() => setIsOpen(true)}
         className="group relative cursor-pointer text-left"
-        style={{ transform: `rotate(${rotation}deg)` }}
+        style={{
+          transform: `rotate(${rotation}deg)`,
+          ...touchTargetStyles,
+        }}
         aria-label={`Ver demo: ${demo.title}`}
       >
-        {/* Pin — attaches card to cork board */}
+        {/* Pin — attaches card to cork board, fixed px within design canvas */}
         <img
           src="/assets/elements/pin.png"
           alt=""
           className="absolute z-30 pointer-events-none"
           style={{
-            top: "-14px",
+            top: PIN_TOP,
             left: "50%",
             transform: "translateX(-50%)",
-            width: "clamp(18px, 4vw, 28px)",
+            width: PIN_WIDTH,
             height: "auto",
           }}
           aria-hidden="true"
@@ -74,9 +88,9 @@ export default function DemoCard({ demo, index }: DemoCardProps) {
             </div>
           </div>
 
-          {/* Title label */}
+          {/* Title label — responsive font sizes */}
           <div className="px-3 py-2 bg-cream/80">
-            <p className="font-heading text-xs sm:text-sm text-text-primary font-semibold truncate">
+            <p className="font-heading text-xs sm:text-sm md:text-base text-text-primary font-semibold truncate">
               {demo.title}
             </p>
             {demo.category && (
