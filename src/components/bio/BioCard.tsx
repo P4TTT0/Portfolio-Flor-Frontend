@@ -38,7 +38,7 @@ export default function BioCard({ bio, picture }: BioCardProps) {
       const scaleX = parent.clientWidth / DESIGN_WIDTH;
       const scaleY = parent.clientHeight / DESIGN_HEIGHT;
       // In desktop (>1024px), allow scaling up to fill the space
-      const maxScale = width < 1024 ? 1 : 2.5;
+      const maxScale = width < 1024 ? 1 : 1.8;
       setScale(Math.min(scaleX, scaleY, maxScale));
     };
 
@@ -72,10 +72,10 @@ export default function BioCard({ bio, picture }: BioCardProps) {
           style={{
             position: "absolute",
             left: isMobile ? -80 : isTablet ? -50 : undefined,
-            right: !isMobile && !isTablet ? -112 : undefined,
-            top: isMobile ? -100 : isTablet ? -115 : -150,
-            width: isMobile ? 760 : isTablet ? 700 : 900,
-            height: isMobile ? 700 : isTablet ? 670 : 800,
+            right: !isMobile && !isTablet ? -80 : undefined,
+            top: isMobile ? -100 : isTablet ? -115 : -120,
+            width: isMobile ? 760 : isTablet ? 700 : 750,
+            height: isMobile ? 700 : isTablet ? 670 : 670,
             transform: isMobile ? "rotate(87deg)" : "rotate(-3deg)",
             transformOrigin: "center center",
             zIndex: 40,
@@ -97,10 +97,10 @@ export default function BioCard({ bio, picture }: BioCardProps) {
           <div
             style={{
               position: "absolute",
-              top: isMobile ? 35 : isTablet ? 137 : 145,
-              right: isMobile ? 176 : isTablet ? 71 : 95,
-              bottom: isMobile ? 35 : isTablet ? 137 : 145,
-              left: isMobile ? 176 : isTablet ? 71 : 95,
+              top: isMobile ? 35 : isTablet ? 137 : 120,
+              right: isMobile ? 176 : isTablet ? 71 : 80,
+              bottom: isMobile ? 35 : isTablet ? 137 : 120,
+              left: isMobile ? 176 : isTablet ? 71 : 80,
               transform: isMobile ? "rotate(-90deg)" : "none",
               transformOrigin: "center center",
             }}
@@ -109,7 +109,7 @@ export default function BioCard({ bio, picture }: BioCardProps) {
               className="font-body"
               style={{
                 whiteSpace: "pre-line",
-                fontSize: isMobile ? 25 : isTablet ? 25 : 32,
+                fontSize: isMobile ? 25 : isTablet ? 25 : 26,
                 lineHeight: 1.9,
                 color: "rgb(94, 94, 94)",
                 textAlign: "justify",
@@ -127,9 +127,9 @@ export default function BioCard({ bio, picture }: BioCardProps) {
           aria-hidden="true"
           style={{
             position: "absolute",
-            right: isMobile ? 332 : isTablet ? 193 : 162,
-            bottom: isMobile ? -35 : isTablet ? 107 : 43,
-            width: isMobile ? 142 : isTablet ? 125 : 151,
+            right: isMobile ? 332 : isTablet ? 193 : 172,
+            bottom: isMobile ? -35 : isTablet ? 107 : 100,
+            width: isMobile ? 142 : isTablet ? 125 : 136,
             zIndex: 52,
             pointerEvents: "none",
             transform: "rotate(-26deg)",
@@ -144,9 +144,9 @@ export default function BioCard({ bio, picture }: BioCardProps) {
             style={{
               position: "absolute",
               right: isMobile ? 9 : isTablet ? -54 : undefined,
-              left: !isMobile && !isTablet ? 514 : undefined,
-              bottom: isMobile ? -58 : isTablet ? -9 : -49,
-              width: isMobile ? 217 : isTablet ? 218 : 242,
+              left: !isMobile && !isTablet ? 494 : undefined,
+              bottom: isMobile ? -58 : isTablet ? -9 : 10,
+              width: isMobile ? 217 : isTablet ? 218 : 220,
               aspectRatio: "1 / 1",
               objectFit: "cover",
               borderRadius: 2,
@@ -164,9 +164,9 @@ export default function BioCard({ bio, picture }: BioCardProps) {
           style={{
             position: "absolute",
             right: isMobile ? 2 : isTablet ? -64 : undefined,
-            left: !isMobile && !isTablet ? 500 : undefined,
-            bottom: isMobile ? -117 : isTablet ? -69 : -113,
-            width: isMobile ? 236 : isTablet ? 243 : 267,
+            left: !isMobile && !isTablet ? 482 : undefined,
+            bottom: isMobile ? -117 : isTablet ? -69 : -47,
+            width: isMobile ? 236 : isTablet ? 243 : 238,
             zIndex: 50,
             pointerEvents: "none",
             transform: "rotate(8deg)",
@@ -180,9 +180,9 @@ export default function BioCard({ bio, picture }: BioCardProps) {
           aria-hidden="true"
           style={{
             position: "absolute",
-            right: isMobile ? 17 : isTablet ? -47 : -123,
-            bottom: isMobile ? 72 : isTablet ? 123 : 102,
-            width: isMobile ? 65 : isTablet ? 71 : 75,
+            right: isMobile ? 17 : isTablet ? -47 : -94,
+            bottom: isMobile ? 72 : isTablet ? 123 : 148,
+            width: isMobile ? 65 : isTablet ? 71 : 62,
             zIndex: 60,
             pointerEvents: "none",
             transform: isMobile ? "rotate(10deg)" : isTablet ? "rotate(15deg)" : "rotate(9deg)",
