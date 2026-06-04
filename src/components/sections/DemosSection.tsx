@@ -32,8 +32,8 @@ const GRID_CONFIG: Record<
 
 const PAPER_STAR_CONFIG: Record<Breakpoint, { top: number; right: number; width: number }> = {
   mobile: { top: 14, right: 15, width: 165 },
-  tablet: { top: -17, right: 12, width: 182 },
-  desktop: { top: -17, right: 12, width: 182 },
+  tablet: { top: 10, right: 16, width: 159 },
+  desktop: { top: 10, right: 16, width: 159 },
 };
 
 export default function DemosSection({ id, demos }: DemosSectionProps) {
