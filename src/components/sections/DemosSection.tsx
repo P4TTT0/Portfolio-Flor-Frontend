@@ -12,7 +12,7 @@ interface DemosSectionProps {
 
 export default function DemosSection({ id, demos }: DemosSectionProps) {
   return (
-    <section id={id} className="snap-start h-screen flex items-center justify-center relative overflow-hidden">
+    <section id={id} className="snap-start h-dvh flex items-center justify-center relative overflow-hidden">
       {/* Solid background — full viewport height */}
       <div className="absolute inset-0 bg-avocado" aria-hidden="true" />
 
@@ -35,9 +35,9 @@ export default function DemosSection({ id, demos }: DemosSectionProps) {
           alt=""
           className="absolute pointer-events-none"
           style={{
-            top: 5,
-            right: 30,
-            width: 111,
+            top: "1%",
+            right: "3%",
+            width: "clamp(50px, 12vw, 111px)",
             height: "auto",
             zIndex: 20,
           }}

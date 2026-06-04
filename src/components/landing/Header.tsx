@@ -7,7 +7,7 @@ interface HeaderProps {
 
 export default function Header({ name, role }: HeaderProps) {
   return (
-    <header className="relative pt-4 pb-2 sm:pt-6 sm:pb-3 px-4 text-center select-none">
+    <header className="relative pt-[75px] sm:pt-6 pb-2 sm:pb-3 px-4 text-center select-none">
       {/* --- Title — ransom name --- */}
       <h1 className="py-1">
         <RansomName name={name} />

@@ -26,10 +26,9 @@ export default function SocialCard({ social, index }: SocialCardProps) {
     >
       {/* Post-it card — large, centered */}
       <div
-        className="relative w-full rounded-sm shadow-[6px_8px_24px_rgba(0,0,0,0.2)] transition-[filter] duration-200 group-hover:brightness-95 flex flex-col"
+        className="relative w-full rounded-sm shadow-[6px_8px_24px_rgba(0,0,0,0.2)] transition-[filter] duration-200 group-hover:brightness-95 flex flex-col h-[60vh] min-h-[300px] sm:h-[65vh] md:h-[480px]"
         style={{
           backgroundColor: config.bg,
-          height: "480px",
         }}
       >
         {/* Card content */}

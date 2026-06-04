@@ -3,6 +3,13 @@
 :root {
   --background: #F5F2EB;
   --foreground: #3D3D3D;
+  --section-h: 100vh;
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --section-h: 100dvh;
+  }
 }
 
 @theme inline {
@@ -35,8 +42,13 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
   background-blend-mode: overlay;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body {
+    background-attachment: fixed;
+  }
 }
 
 /* --- Craft textures --- */

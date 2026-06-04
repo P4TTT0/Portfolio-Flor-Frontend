@@ -54,7 +54,7 @@ export default function RansomName({ name }: RansomNameProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
-  // Auto-scale to fit container width
+  // Auto-scale to fit container width (only on sm+ where flex-nowrap is active)
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -63,6 +63,12 @@ export default function RansomName({ name }: RansomNameProps) {
     if (!parent) return;
 
     const observer = new ResizeObserver(() => {
+      // Only scale on sm+ (640px+) where flex-nowrap is active
+      if (window.innerWidth < 640) {
+        setScale(1);
+        return;
+      }
+
       const parentWidth = parent.clientWidth - 32;
       const contentWidth = container.scrollWidth;
 
@@ -92,7 +98,7 @@ export default function RansomName({ name }: RansomNameProps) {
     <div className="flex items-center justify-center overflow-hidden">
       <div
         ref={containerRef}
-        className="flex items-center justify-center whitespace-nowrap"
+        className="flex items-center justify-center flex-wrap sm:flex-nowrap"
         style={{
           transform: `scale(${scale})`,
           transformOrigin: "center center",
@@ -116,7 +122,7 @@ export default function RansomName({ name }: RansomNameProps) {
                     className="h-10 sm:h-12 md:h-14 w-auto object-contain"
                     style={{
                       transform: `rotate(${style.rotation}deg) scale(${style.scale})`,
-                      marginLeft: "-20px",
+                      marginLeft: "clamp(-12px, -2vw, -20px)",
                     }}
                   />
                 );
@@ -139,7 +145,7 @@ export default function RansomName({ name }: RansomNameProps) {
             })}
             {/* Extra space between words */}
             {wi < words.length - 1 && (
-              <span className="w-4 sm:w-6 md:w-8" aria-hidden="true" />
+              <span className="w-6 sm:w-6 md:w-8" aria-hidden="true" />
             )}
           </span>
         ))}

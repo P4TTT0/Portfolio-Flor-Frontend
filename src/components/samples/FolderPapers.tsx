@@ -64,8 +64,8 @@ export default function FolderPapers({
       <div
         className="relative flex flex-col"
         style={{
-          maxHeight: "calc(100vh - 6rem)",
-          minHeight: "min(28rem, calc(100vh - 6rem))",
+          maxHeight: "calc(var(--section-h) - 6rem)",
+          minHeight: "min(28rem, calc(var(--section-h) - 6rem))",
           paddingTop: TAB_HEIGHT + PEEK_PX,
         }}
         role="tablist"

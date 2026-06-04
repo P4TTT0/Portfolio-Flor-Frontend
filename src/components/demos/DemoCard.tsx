@@ -39,7 +39,7 @@ export default function DemoCard({ demo, index }: DemoCardProps) {
             top: "-14px",
             left: "50%",
             transform: "translateX(-50%)",
-            width: "28px",
+            width: "clamp(18px, 4vw, 28px)",
             height: "auto",
           }}
           aria-hidden="true"

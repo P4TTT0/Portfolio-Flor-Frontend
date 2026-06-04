@@ -21,7 +21,7 @@ export default function LandingContent() {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center">
+      <div className="h-dvh flex items-center justify-center">
         <span className="font-heading text-xl text-text-secondary/50 tracking-widest">
           Cargando...
         </span>
@@ -33,7 +33,7 @@ export default function LandingContent() {
     <>
       <main
         ref={containerRef}
-        className="snap-y snap-mandatory h-screen overflow-y-auto overflow-x-hidden"
+        className="snap-y snap-mandatory h-dvh overflow-y-auto overflow-x-hidden"
       >
         <BioSection id="bio" name={name} role={role} bio={bio} picture={picture} />
         <DemosSection id="demos" demos={demos} />

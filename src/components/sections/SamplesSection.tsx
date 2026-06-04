@@ -149,13 +149,13 @@ export default function SamplesSection({
     return (
       <section
         id={id}
-        className="snap-start h-screen flex items-center justify-center p-4 sm:p-6 relative"
+        className="snap-start h-dvh flex items-center justify-center p-4 sm:p-6 relative"
       >
         {/* Solid background — full viewport height */}
         <div className="absolute inset-0 bg-blush" aria-hidden="true" />
 
         <div className="w-full max-w-[min(80vw,700px)] rounded-xl shadow-[3px_8px_30px_rgba(0,0,0,0.12)] border border-[#C9AD86]/20 flex items-center justify-center"
-          style={{ maxHeight: "calc(100vh - 4rem)", minHeight: "18rem", backgroundImage: "url('/assets/textures/rough-paper.jpg')", backgroundSize: "contain", backgroundPosition: "center", backgroundRepeat: "repeat", backgroundBlendMode: "multiply", backgroundColor: "#F5F0E8" }}
+          style={{ maxHeight: "calc(var(--section-h) - 4rem)", minHeight: "18rem", backgroundImage: "url('/assets/textures/rough-paper.jpg')", backgroundSize: "contain", backgroundPosition: "center", backgroundRepeat: "repeat", backgroundBlendMode: "multiply", backgroundColor: "#F5F0E8" }}
         >
           <span className="font-heading text-xl sm:text-2xl text-text-secondary/35 tracking-widest uppercase">
             Sin samples aún
@@ -168,7 +168,7 @@ export default function SamplesSection({
   return (
     <section
       id={id}
-      className="snap-start h-screen flex items-center justify-center p-2 sm:p-4 relative"
+      className="snap-start h-dvh flex items-center justify-center p-2 sm:p-4 relative"
     >
       {/* Solid background — full viewport height */}
       <div className="absolute inset-0 bg-blush" aria-hidden="true" />

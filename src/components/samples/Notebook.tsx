@@ -17,8 +17,8 @@ export default function Notebook({ children }: NotebookProps) {
       <div
         className="relative rounded-xl shadow-[3px_8px_30px_rgba(0,0,0,0.12)] border border-[#C9AD86]/15 flex flex-col overflow-hidden"
         style={{
-          maxHeight: "calc(100vh - 6rem)",
-          minHeight: "min(28rem, calc(100vh - 6rem))",
+          maxHeight: "calc(var(--section-h) - 6rem)",
+          minHeight: "min(28rem, calc(var(--section-h) - 6rem))",
           backgroundColor: "#F5F0E8",
         }}
       >

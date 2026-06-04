@@ -93,7 +93,7 @@ export default function VideoPopup({ videoId, title, category, onClose }: VideoP
           {/* Red margin line */}
           <div
             className="absolute top-0 bottom-0 w-px bg-red-300/40"
-            style={{ left: "56px" }}
+            style={{ left: "clamp(24px, 8vw, 56px)" }}
             aria-hidden="true"
           />
 
