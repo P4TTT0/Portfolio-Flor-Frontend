@@ -18,7 +18,7 @@ const DESIGN_HEIGHT = 800;
 const BREAKPOINT_SCALES: Record<Breakpoint, number> = {
   mobile: 1.0,
   tablet: 1.2,
-  desktop: 1.5,
+  desktop: 1.2,
 };
 
 const GRID_CONFIG: Record<
