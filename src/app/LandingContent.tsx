@@ -5,7 +5,7 @@ import { useSanityContent } from "@/lib/use-sanity-content";
 import landingData from "@/lib/landing-data";
 import BioSection from "@/components/sections/BioSection";
 import DemosSection from "@/components/sections/DemosSection";
-import PlaceholderSection from "@/components/sections/PlaceholderSection";
+import WorksSection from "@/components/sections/WorksSection";
 import SamplesSection from "@/components/sections/SamplesSection";
 import SocialSection from "@/components/sections/SocialSection";
 import SectionNav from "@/components/sections/SectionNav";
@@ -38,7 +38,7 @@ export default function LandingContent() {
         <BioSection id="bio" name={name} role={role} bio={bio} picture={picture} />
         <DemosSection id="demos" demos={demos} />
         <SamplesSection id="samples" samples={samples} />
-        <PlaceholderSection id="works" label="Works" color="peach" />
+        <WorksSection id="works" />
         <SocialSection id="social" social={social} />
       </main>
       <SectionNav containerRef={containerRef} />
