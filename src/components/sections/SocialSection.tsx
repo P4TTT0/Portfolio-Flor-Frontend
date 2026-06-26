@@ -36,17 +36,22 @@ export default function SocialSection({ id, social }: SocialSectionProps) {
       const canScrollLeft = carousel.scrollLeft > 0;
       const canScrollRight = carousel.scrollLeft < carousel.scrollWidth - carousel.clientWidth - 1;
 
-      // If we can't scroll in the direction of the wheel, don't intercept
-      if (e.deltaY > 0 && !canScrollRight) return;
-      if (e.deltaY < 0 && !canScrollLeft) return;
-
       // Multiply scroll speed for better UX
       const scrollAmount = e.deltaY * 3;
 
-      // Intercept and move carousel
-      e.preventDefault();
-      e.stopPropagation();
-      carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      // If scrolling down and can scroll right, move carousel
+      if (e.deltaY > 0 && canScrollRight) {
+        e.preventDefault();
+        e.stopPropagation();
+        carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+      // If scrolling up and can scroll left, move carousel
+      else if (e.deltaY < 0 && canScrollLeft) {
+        e.preventDefault();
+        e.stopPropagation();
+        carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+      // Otherwise, let Lenis handle the scroll
     };
 
     section.addEventListener("wheel", handleWheel, { passive: false, capture: true });
