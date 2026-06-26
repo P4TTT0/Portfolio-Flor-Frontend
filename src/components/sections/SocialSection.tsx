@@ -77,9 +77,9 @@ export default function SocialSection({ id, social }: SocialSectionProps) {
         className="relative w-full h-full flex items-center overflow-x-auto snap-x snap-mandatory" 
         style={{ zIndex: 50 }}
       >
-        <div className="flex gap-8 px-4 sm:px-8 md:px-12 lg:px-[calc(50vw-200px)]">
+        <div className="flex gap-6 sm:gap-8 px-[12.5vw] sm:px-[calc(50vw-180px)] md:px-[calc(50vw-210px)] lg:px-[calc(50vw-240px)]">
           {social.map((s, i) => (
-            <div key={s.platform || i} className="snap-center shrink-0 w-[85vw] sm:w-[500px] md:w-[600px]">
+            <div key={s.platform || i} className="snap-center shrink-0 w-[75vw] sm:w-[360px] md:w-[420px] lg:w-[480px]">
               <SocialCard social={s} index={i} />
             </div>
           ))}

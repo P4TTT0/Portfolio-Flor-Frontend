@@ -26,31 +26,31 @@ export default function SocialCard({ social, index }: SocialCardProps) {
     >
       {/* Post-it card — large, centered */}
       <div
-        className="relative w-full rounded-sm shadow-[6px_8px_24px_rgba(0,0,0,0.2)] transition-[filter] duration-200 group-hover:brightness-95 flex flex-col h-[60vh] min-h-[300px] sm:h-[65vh] md:h-[480px]"
+        className="relative w-full aspect-square rounded-sm shadow-[6px_8px_24px_rgba(0,0,0,0.2)] transition-[filter] duration-200 group-hover:brightness-95 flex flex-col"
         style={{
           backgroundColor: config.bg,
         }}
       >
         {/* Card content */}
-        <div className="px-8 sm:px-10 pt-6 pb-8 flex flex-col flex-1">
+        <div className="px-5 sm:px-8 md:px-10 pt-5 sm:pt-6 pb-5 sm:pb-8 flex flex-col flex-1">
           {/* Header: Icon + Platform name */}
-          <div className="flex items-start gap-4 mb-4">
+          <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
             {/* Icon box */}
             <div
-              className="w-16 h-16 rounded-lg flex items-center justify-center shrink-0"
+              className="w-11 h-11 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-lg flex items-center justify-center shrink-0"
               style={{ backgroundColor: config.accent }}
             >
-              <Icon className="w-8 h-8 text-white" />
+              <Icon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
             </div>
 
             {/* Platform name + username */}
             <div className="min-w-0">
-              <p className="font-body text-2xl font-bold text-neutral-900 leading-tight truncate">
+              <p className="font-body text-xl sm:text-2xl font-bold text-neutral-900 leading-tight truncate">
                 {social.platform}
               </p>
               {social.username && (
                 <p
-                  className="font-body text-lg font-semibold truncate mt-1"
+                  className="font-body text-base sm:text-lg font-semibold truncate mt-1"
                   style={{ color: config.accent }}
                 >
                   {social.username}
@@ -61,20 +61,20 @@ export default function SocialCard({ social, index }: SocialCardProps) {
 
           {/* Dotted separator */}
           <div
-            className="border-t border-dotted my-4"
+            className="border-t border-dotted my-3 sm:my-4"
             style={{ borderColor: `${config.accent}33` }}
           />
 
           {/* Description */}
           {social.description && (
-            <p className="font-body text-base text-neutral-700 leading-relaxed line-clamp-4 mb-auto">
+            <p className="font-body text-sm sm:text-base text-neutral-700 leading-relaxed line-clamp-3 sm:line-clamp-4 mb-auto">
               {social.description}
             </p>
           )}
 
           {/* CTA */}
           <p
-            className="font-body text-lg font-semibold mt-auto pt-4"
+            className="font-body text-base sm:text-lg font-semibold mt-auto pt-3 sm:pt-4"
             style={{ color: config.accent }}
           >
             Visitar &rarr;
