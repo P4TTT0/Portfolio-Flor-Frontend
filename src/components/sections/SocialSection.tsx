@@ -13,6 +13,7 @@ interface SocialSectionProps {
 export default function SocialSection({ id, social }: SocialSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const targetScrollLeftRef = useRef(0);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -22,41 +23,41 @@ export default function SocialSection({ id, social }: SocialSectionProps) {
     const isTouchCoarse = window.matchMedia('(pointer: coarse)').matches;
     if (isTouchCoarse) return;
 
+    const syncTarget = () => {
+      targetScrollLeftRef.current = carousel.scrollLeft;
+    };
+
     const handleWheel = (e: WheelEvent) => {
-      // Only intercept vertical scroll
       if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
 
-      // Check if section is fully in view
       const rect = section.getBoundingClientRect();
       const isInView = Math.abs(rect.top) < 50 && Math.abs(rect.bottom - window.innerHeight) < 50;
-
       if (!isInView) return;
 
-      // Check if we can scroll horizontally
-      const canScrollLeft = carousel.scrollLeft > 0;
-      const canScrollRight = carousel.scrollLeft < carousel.scrollWidth - carousel.clientWidth - 1;
+      const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+      const canScrollLeft = targetScrollLeftRef.current > 0;
+      const canScrollRight = targetScrollLeftRef.current < maxScroll - 1;
 
-      // Multiply scroll speed for better UX
-      const scrollAmount = e.deltaY * 3;
-
-      // If scrolling down and can scroll right, move carousel
       if (e.deltaY > 0 && canScrollRight) {
         e.preventDefault();
         e.stopPropagation();
-        carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-      }
-      // If scrolling up and can scroll left, move carousel
-      else if (e.deltaY < 0 && canScrollLeft) {
+        const newTarget = Math.min(targetScrollLeftRef.current + e.deltaY * 3, maxScroll);
+        targetScrollLeftRef.current = newTarget;
+        carousel.scrollTo({ left: newTarget, behavior: 'smooth' });
+      } else if (e.deltaY < 0 && canScrollLeft) {
         e.preventDefault();
         e.stopPropagation();
-        carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        const newTarget = Math.max(targetScrollLeftRef.current + e.deltaY * 3, 0);
+        targetScrollLeftRef.current = newTarget;
+        carousel.scrollTo({ left: newTarget, behavior: 'smooth' });
       }
-      // Otherwise, let Lenis handle the scroll
     };
 
+    carousel.addEventListener("scrollend", syncTarget);
     section.addEventListener("wheel", handleWheel, { passive: false, capture: true });
 
     return () => {
+      carousel.removeEventListener("scrollend", syncTarget);
       section.removeEventListener("wheel", handleWheel, { capture: true });
     };
   }, []);
