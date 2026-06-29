@@ -88,13 +88,19 @@ export default function DemoCard({ demo, index }: DemoCardProps) {
             </div>
           </div>
 
-          {/* Title label — responsive font sizes */}
+          {/* Title label */}
           <div className="px-3 py-2 bg-cream/80">
-            <p className="font-heading text-xs sm:text-sm md:text-base text-text-primary font-semibold truncate">
+            <p
+              className="font-heading text-text-primary font-semibold truncate"
+              style={{ fontSize: isMobile ? 24 : 12 }}
+            >
               {demo.title}
             </p>
             {demo.category && (
-              <p className="font-body text-[10px] sm:text-xs text-text-secondary/70 uppercase tracking-wider mt-0.5">
+              <p
+                className="font-body text-text-secondary/70 uppercase tracking-wider mt-0.5"
+                style={{ fontSize: isMobile ? 18 : 10 }}
+              >
                 {demo.category}
               </p>
             )}

@@ -8,6 +8,7 @@ import DemosSection from "@/components/sections/DemosSection";
 import WorksSection from "@/components/sections/WorksSection";
 import SamplesSection from "@/components/sections/SamplesSection";
 import SocialSection from "@/components/sections/SocialSection";
+import ContactSection from "@/components/sections/ContactSection";
 import SectionNav from "@/components/sections/SectionNav";
 
 export default function LandingContent() {
@@ -40,6 +41,7 @@ export default function LandingContent() {
         <SamplesSection id="samples" samples={samples} />
         <WorksSection id="works" />
         <SocialSection id="social" social={social} />
+        <ContactSection id="contact" />
       </main>
       <SectionNav containerRef={containerRef} />
     </>
