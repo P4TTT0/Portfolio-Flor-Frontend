@@ -36,6 +36,11 @@
   50% { transform: translateY(-4px); }
 }
 
+@keyframes deep-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
 body {
   color: var(--foreground);
   background-color: var(--background);

@@ -114,8 +114,8 @@ export default function ContactForm() {
 
       {/* SVG heading: anchored top-left */}
       <div
-        className="hidden md:block absolute"
-        style={{ top: "6vh", left: "4vw", width: "46%" }}
+        className="hidden md:block absolute animate-[deep-float_4s_ease-in-out_infinite]"
+        style={{ top: "14vh", left: "12vw", width: "34%" }}
       >
         <Image
           src="/assets/elements/contact-text.svg"
@@ -124,13 +124,14 @@ export default function ContactForm() {
           height={550}
           className="w-full object-contain"
           priority
+          style={{ filter: "invert(27%)" }}
         />
       </div>
 
       {/* "contáctame" label: above the card, right-aligned */}
       <p
         className="hidden md:block absolute font-body text-sm font-semibold tracking-widest text-neutral-800"
-        style={{ right: "4vw", top: "calc(24vh - 30px)" }}
+        style={{ right: "14vw", top: "calc(24vh - 30px)" }}
       >
         contáctame
       </p>
@@ -139,9 +140,9 @@ export default function ContactForm() {
       <div
         className="hidden md:block absolute rounded-t-xl overflow-hidden"
         style={{
-          left: "51%",
-          right: "4vw",
-          top: "24vh",
+          left: "49%",
+          right: "13vw",
+          top: "25vh",
           bottom: "-60px",
           backgroundImage: "url('/assets/elements/contact-paper.png')",
           backgroundSize: "cover",
@@ -151,21 +152,84 @@ export default function ContactForm() {
         {formFields}
       </div>
 
-      {/* ── MOBILE (<md) ──────────────────────────────────────────────── */}
-      <div className="md:hidden w-full h-full flex flex-col items-center justify-center px-6 gap-4">
-        {/* SVG heading above the form */}
+      {/* phone-cable: bottom-left, partially off-screen */}
+      <div
+        className="hidden md:block absolute pointer-events-none"
+        style={{ bottom: "-5%", left: "-2%", width: "44%", transform: "rotate(-130deg)" }}
+        aria-hidden="true"
+      >
         <Image
-          src="/assets/elements/contact-text.svg"
-          alt="¿Buscas la voz para tu marca?"
-          width={880}
-          height={550}
-          className="w-full max-w-[260px] object-contain"
-          priority
+          src="/assets/elements/phone-cable.png"
+          alt=""
+          width={600}
+          height={338}
+          className="w-full object-contain"
         />
-        {/* Paper form card */}
+      </div>
+
+      {/* hanging-phone: top-right, partially off-screen on the right */}
+      <div
+        className="hidden md:block absolute pointer-events-none animate-[gentle-float_5s_ease-in-out_infinite]"
+        style={{ top: "-4%", right: "-4%", width: "21%" }}
+        aria-hidden="true"
+      >
+        <Image
+          src="/assets/elements/hanging-phone.png"
+          alt=""
+          width={545}
+          height={660}
+          className="w-full object-contain"
+        />
+      </div>
+
+      {/* ── MOBILE (<md) ──────────────────────────────────────────────── */}
+      <div className="md:hidden w-full h-full relative flex flex-col items-center justify-center px-6 gap-4">
+
+        {/* hanging-phone: centered at top, cord exits off-screen */}
         <div
-          className="w-full max-w-sm rounded-2xl overflow-hidden"
+          className="absolute pointer-events-none animate-[gentle-float_5s_ease-in-out_infinite]"
           style={{
+            top: '-9%',
+            left: '24%',
+            width: '53%',
+            zIndex: 999
+          }}
+          aria-hidden="true"
+        >
+          <Image
+            src="/assets/elements/hanging-phone.png"
+            alt=""
+            width={545}
+            height={660}
+            className="w-full object-contain"
+          />
+        </div>
+
+        {/* phone-cable: bottom layer, behind the paper card */}
+        <div
+          className="absolute bottom-0 left-0 w-full pointer-events-none"
+          style={{
+            transform: 'rotate(-134deg)',
+            width: '108%',
+            bottom: '-35px',
+            left: '-15px'
+          }}
+          aria-hidden="true"
+        >
+          <Image
+            src="/assets/elements/phone-cable.png"
+            alt=""
+            width={600}
+            height={338}
+            className="w-full object-contain"
+          />
+        </div>
+
+        {/* Paper form card — above the cable */}
+        <div
+          className="relative w-full max-w-sm rounded-2xl overflow-hidden"
+          style={{
+            zIndex: 1,
             backgroundImage: "url('/assets/elements/contact-paper.png')",
             backgroundSize: "cover",
             backgroundPosition: "center",
@@ -173,10 +237,12 @@ export default function ContactForm() {
         >
           {formFields}
         </div>
+
         {/* contáctame below the form */}
-        <p className="font-body text-sm font-semibold tracking-widest text-neutral-800">
+        <p className="relative font-body text-sm font-semibold tracking-widest text-neutral-800" style={{ zIndex: 1 }}>
           contáctame
         </p>
+
       </div>
 
     </div>

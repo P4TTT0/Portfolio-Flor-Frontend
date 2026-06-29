@@ -10,7 +10,7 @@ export default function ContactSection({ id }: ContactSectionProps) {
       id={id}
       className="snap-start h-dvh flex items-center justify-center relative overflow-hidden"
     >
-      <div className="absolute inset-0" style={{ backgroundColor: "#e6e3dc" }} aria-hidden="true" />
+      <div className="absolute inset-0" style={{ backgroundColor: "#EFD7CF" }} aria-hidden="true" />
       <div className="relative z-10 w-full h-full flex items-center justify-center">
         <ContactForm />
       </div>
