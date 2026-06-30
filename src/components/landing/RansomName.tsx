@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { randomRotation } from "@/lib/youtube-utils";
+
+function randomRotation(min = -10, max = 10): number {
+  return Math.random() * (max - min) + min;
+}
 
 interface RansomNameProps {
   name: string;
@@ -44,7 +47,7 @@ function getVariantCount(char: string): number {
 
 function generateStyles(name: string) {
   return name.split("").map(() => ({
-    rotation: randomRotation(-10, 10),
+    rotation: randomRotation(),
     scale: 0.85 + Math.random() * 0.3,
   }));
 }

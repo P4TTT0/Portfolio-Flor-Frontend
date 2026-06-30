@@ -31,11 +31,3 @@ export function getYouTubeThumbnail(videoId: string): string {
 export function getYouTubeEmbedUrl(videoId: string): string {
   return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&showinfo=0&controls=1`;
 }
-
-/**
- * Generate a random rotation angle for handmade feel.
- * Returns value between min and max degrees.
- */
-export function randomRotation(min = -4, max = 4): number {
-  return Math.random() * (max - min) + min;
-}

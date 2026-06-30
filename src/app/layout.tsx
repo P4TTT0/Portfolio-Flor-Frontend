@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Lato, Archivo_Black, League_Spartan, Cormorant_Garamond } from "next/font/google";
-import SmoothScroll from "@/components/ui/SmoothScroll";
 import "./globals.css";
 
 const playfairDisplay = Playfair_Display({
@@ -48,7 +47,6 @@ export default function RootLayout({
       className={`${playfairDisplay.variable} ${lato.variable} ${archivoBlack.variable} ${leagueSpartan.variable} ${cormorantGaramond.variable}`}
     >
       <body className="font-body h-full antialiased">
-        <SmoothScroll />
         {children}
       </body>
     </html>

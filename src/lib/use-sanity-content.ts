@@ -51,11 +51,6 @@ export function useSanityContent() {
           client.fetch<SocialItem[]>(`*[_type == "profile"][0].social[] { platform, url, username, description }`),
         ]);
 
-        console.log("[Sanity] Profile:", JSON.stringify(profileResult, null, 2));
-        console.log("[Sanity] Demos:", demosResult);
-        console.log("[Sanity] Samples:", samplesResult);
-        console.log("[Sanity] Social:", socialResult);
-
         if (!cancelled) {
           setProfile(profileResult ? {
             name: profileResult.name || null,

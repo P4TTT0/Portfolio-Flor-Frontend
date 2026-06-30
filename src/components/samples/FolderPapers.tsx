@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import Clip from "@/components/craft/Clip";
 
 // ---------------------------------------------------------------------------
 // FolderPapers — two stacked paper sheets with integrated folder tabs
@@ -73,7 +72,6 @@ export default function FolderPapers({
       >
         {categories.map((cat, i) => {
           const isActive = cat === activeCategory;
-          const isLeft = i === 0;
           const { path, mask } = shapes[i];
 
           return (

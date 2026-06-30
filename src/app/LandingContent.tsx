@@ -17,7 +17,7 @@ export default function LandingContent() {
 
   const name = profile?.name || landingData.name;
   const role = profile?.role || landingData.role;
-  const bio = profile?.bio || landingData.folders.find((f) => f.id === "bio")?.content || "";
+  const bio = profile?.bio || landingData.bioFallback;
   const picture = profile?.picture;
 
   if (loading) {

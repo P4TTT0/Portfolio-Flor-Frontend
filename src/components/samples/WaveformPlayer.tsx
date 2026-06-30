@@ -7,6 +7,11 @@ import { useAudioPlayer, formatTime, PEAK_BUCKETS } from "@/hooks/useAudioPlayer
 // WaveformPlayer — SVG ink-stroke waveform + playback controls
 // ---------------------------------------------------------------------------
 
+// Bar geometry constants (module-level: PEAK_BUCKETS is a constant, no reason
+// to recompute these on every render — also keeps useMemo deps clean)
+const BAR_GAP = 2;
+const BAR_WIDTH = Math.max(0.4, 100 / PEAK_BUCKETS - BAR_GAP);
+
 export interface WaveformPlayerHandle {
   play: () => void;
   pause: () => void;
@@ -77,9 +82,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, WaveformPlayerProps>(
     [progress, seek],
   );
 
-  // Bar geometry constants
-  const BAR_GAP = 2; // gap between bars in viewBox coords
-  const BAR_WIDTH = Math.max(0.4, 100 / PEAK_BUCKETS - BAR_GAP);
+  // Bar geometry constants live at module scope (see top of file)
 
   // Build SVG bars — bottom-to-top growth with spacing, fade-out, and playhead
   const waveformBars = useMemo(() => {
