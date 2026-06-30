@@ -187,9 +187,6 @@ All four content types (profile, demos, samples, social) are fetched in a single
 
 ---
 
-
----
-
 ## 📄 License
 
 This codebase is the production portfolio for a real client. The source is shared for learning/portfolio purposes; please don't republish the assets (photos, audio reels, design PNGs) or clone the visual identity 1:1.
