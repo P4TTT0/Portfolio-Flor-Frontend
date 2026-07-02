@@ -29,6 +29,7 @@
   --font-archivo-black: var(--font-archivo-black);
   --font-league-spartan: var(--font-league-spartan);
   --font-cormorant-garamond: var(--font-cormorant-garamond);
+  --font-space-grotesk: var(--font-space-grotesk);
 }
 
 @keyframes gentle-float {
@@ -36,10 +37,16 @@
   50% { transform: translateY(-4px); }
 }
 
+@keyframes polaroid-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
 @keyframes deep-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-12px); }
 }
+
 
 body {
   color: var(--foreground);

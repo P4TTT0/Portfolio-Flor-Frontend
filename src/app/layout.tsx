@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Lato, Archivo_Black, League_Spartan, Cormorant_Garamond } from "next/font/google";
+import { Playfair_Display, Lato, Archivo_Black, League_Spartan, Cormorant_Garamond, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 const playfairDisplay = Playfair_Display({
@@ -31,6 +31,12 @@ const cormorantGaramond = Cormorant_Garamond({
   weight: ["400", "700"],
 });
 
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  weight: ["300", "700"],
+});
+
 export const metadata: Metadata = {
   title: "Florencia Acevedo — Locutora Nacional",
   description: "Portfolio de Florencia Acevedo, Locutora Nacional",
@@ -44,7 +50,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${playfairDisplay.variable} ${lato.variable} ${archivoBlack.variable} ${leagueSpartan.variable} ${cormorantGaramond.variable}`}
+      className={`${playfairDisplay.variable} ${lato.variable} ${archivoBlack.variable} ${leagueSpartan.variable} ${cormorantGaramond.variable} ${spaceGrotesk.variable}`}
     >
       <body className="font-body h-full antialiased">
         {children}

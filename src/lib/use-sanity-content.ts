@@ -14,6 +14,13 @@ export interface SampleItem {
   duration?: number;
 }
 
+export interface WorkItem {
+  title: string;
+  category: string;
+  country: string;
+  youtubeUrl: string;
+}
+
 export interface SocialItem {
   platform: string;
   url: string;
@@ -33,6 +40,7 @@ export function useSanityContent() {
   const [demos, setDemos] = useState<DemoItem[]>([]);
   const [samples, setSamples] = useState<SampleItem[]>([]);
   const [social, setSocial] = useState<SocialItem[]>([]);
+  const [works, setWorks] = useState<WorkItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -40,7 +48,7 @@ export function useSanityContent() {
 
     async function fetchAll() {
       try {
-        const [profileResult, demosResult, samplesResult, socialResult] = await Promise.all([
+        const [profileResult, demosResult, samplesResult, socialResult, worksResult] = await Promise.all([
           // Profile - fetch all fields including picture
           client.fetch(`*[_type == "profile"][0] { name, role, bio, "picture": picture.asset->url }`),
           // Demos
@@ -49,6 +57,8 @@ export function useSanityContent() {
           client.fetch<SampleItem[]>(`*[_type == "sample"] | order(_createdAt desc) { title, category, "audioUrl": audioFile.asset->url, duration }`),
           // Social
           client.fetch<SocialItem[]>(`*[_type == "profile"][0].social[] { platform, url, username, description }`),
+          // Works
+          client.fetch<WorkItem[]>(`*[_type == "work"] | order(_createdAt desc) { title, category, country, youtubeUrl }`),
         ]);
 
         if (!cancelled) {
@@ -64,6 +74,7 @@ export function useSanityContent() {
             audioUrl: s.audioUrl || "",
           })));
           setSocial(socialResult || []);
+          setWorks(worksResult || []);
         }
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : String(err);
@@ -79,5 +90,5 @@ export function useSanityContent() {
     return () => { cancelled = true };
   }, []);
 
-  return { profile, demos, samples, social, loading };
+  return { profile, demos, samples, social, works, loading };
 }

@@ -13,7 +13,7 @@ import SectionNav from "@/components/sections/SectionNav";
 
 export default function LandingContent() {
   const containerRef = useRef<HTMLElement>(null);
-  const { profile, demos, samples, social, loading } = useSanityContent();
+  const { profile, demos, samples, social, works, loading } = useSanityContent();
 
   const name = profile?.name || landingData.name;
   const role = profile?.role || landingData.role;
@@ -39,7 +39,7 @@ export default function LandingContent() {
         <BioSection id="bio" name={name} role={role} bio={bio} picture={picture} />
         <DemosSection id="demos" demos={demos} />
         <SamplesSection id="samples" samples={samples} />
-        <WorksSection id="works" />
+        <WorksSection id="works" works={works} />
         <SocialSection id="social" social={social} />
         <ContactSection id="contact" />
       </main>

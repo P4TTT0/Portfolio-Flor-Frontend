@@ -1,23 +1,21 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import type { DemoItem } from "@/lib/use-sanity-content";
-import VideoPopup from "./VideoPopup";
 import { extractYouTubeId, getYouTubeThumbnail } from "@/lib/youtube-utils";
 import useBreakpoint from "@/hooks/useBreakpoint";
 
 interface DemoCardProps {
   demo: DemoItem;
   index: number;
+  onOpen: () => void;
 }
 
 // Pin dimensions in design-canvas pixels (scales naturally via parent transform)
 const PIN_WIDTH = 28;
 const PIN_TOP = -22;
 
-export default function DemoCard({ demo, index }: DemoCardProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function DemoCard({ demo, index, onOpen }: DemoCardProps) {
   const { isMobile } = useBreakpoint();
   const videoId = extractYouTubeId(demo.videoUrl);
   const thumbnail = videoId ? getYouTubeThumbnail(videoId) : null;
@@ -36,7 +34,7 @@ export default function DemoCard({ demo, index }: DemoCardProps) {
     <>
       <button
         type="button"
-        onClick={() => setIsOpen(true)}
+        onClick={onOpen}
         className="group relative cursor-pointer text-left"
         style={{
           transform: `rotate(${rotation}deg)`,
@@ -108,15 +106,6 @@ export default function DemoCard({ demo, index }: DemoCardProps) {
         </div>
       </button>
 
-      {/* Video popup */}
-      {isOpen && (
-        <VideoPopup
-          videoId={videoId}
-          title={demo.title}
-          category={demo.category}
-          onClose={() => setIsOpen(false)}
-        />
-      )}
     </>
   );
 }

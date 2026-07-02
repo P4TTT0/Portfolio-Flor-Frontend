@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type { DemoItem } from "@/lib/use-sanity-content";
 import DemoCard from "@/components/demos/DemoCard";
+import VideoPopup from "@/components/demos/VideoPopup";
 import SectionTitleOverlay from "@/components/ui/SectionTitleOverlay";
+import { extractYouTubeId } from "@/lib/youtube-utils";
 import useBreakpoint, { type Breakpoint } from "@/hooks/useBreakpoint";
 
 interface DemosSectionProps {
@@ -39,6 +41,7 @@ const PAPER_STAR_CONFIG: Record<Breakpoint, { top: number; right: number; width:
 export default function DemosSection({ id, demos }: DemosSectionProps) {
   const { breakpoint, isMobile } = useBreakpoint();
   const [scale, setScale] = useState(1);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Scale computation via ResizeObserver
@@ -150,13 +153,39 @@ export default function DemosSection({ id, demos }: DemosSectionProps) {
             }}
           >
             {demos.map((demo, i) => (
-              <DemoCard key={demo.title} demo={demo} index={i} />
+              <DemoCard key={demo.title} demo={demo} index={i} onOpen={() => setOpenIndex(i)} />
             ))}
           </div>
         </div>
       </div>
 
       <SectionTitleOverlay imageSrc="/assets/animated/demos-title.png" />
+
+      {openIndex !== null && (() => {
+        const demo = demos[openIndex];
+        if (!demo) return null;
+        const videoId = extractYouTubeId(demo.videoUrl);
+        if (!videoId) return null;
+        const playlist = demos
+          .map((d) => ({ title: d.title, category: d.category ?? "", videoId: extractYouTubeId(d.videoUrl) ?? "" }))
+          .filter((item) => item.videoId !== "");
+        return (
+          <VideoPopup
+            videoId={videoId}
+            title={demo.title}
+            category={demo.category}
+            onClose={() => setOpenIndex(null)}
+            onPrev={openIndex > 0 ? () => setOpenIndex((i) => i! - 1) : undefined}
+            onNext={openIndex < demos.length - 1 ? () => setOpenIndex((i) => i! + 1) : undefined}
+            hasPrev={openIndex > 0}
+            hasNext={openIndex < demos.length - 1}
+            navIndex={openIndex}
+            navTotal={demos.length}
+            playlist={playlist}
+            onNavigateTo={(i) => setOpenIndex(i)}
+          />
+        );
+      })()}
     </section>
   );
 }
