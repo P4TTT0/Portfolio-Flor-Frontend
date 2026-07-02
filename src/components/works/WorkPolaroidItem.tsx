@@ -116,7 +116,7 @@ export default function WorkPolaroidItem({
         </div>
 
         {/* Text */}
-        <div className={isCompact ? "text-center" : "text-left"}>
+        <div className={isCompact ? "text-center" : "text-center sm:text-left"}>
           <p
             className="text-text-primary leading-tight"
             style={{

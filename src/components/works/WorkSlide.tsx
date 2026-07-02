@@ -113,11 +113,11 @@ export default function WorkSlide({
       <section
         ref={sectionRef}
         id={sectionId}
-        className="snap-start h-dvh flex items-center justify-center relative overflow-hidden"
+        className="snap-start h-dvh flex items-center justify-center relative overflow-hidden px-4 sm:px-10 lg:px-16"
       >
         <div className="absolute inset-0 bg-oat" aria-hidden="true" />
 
-        <div ref={contentRef} className="relative z-10">
+        <div ref={contentRef} className="relative z-10 w-full max-w-5xl mx-auto flex justify-center">
           <WorkPolaroidItem
             work={work}
             rotation={rotation}

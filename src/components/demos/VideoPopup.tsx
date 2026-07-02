@@ -265,7 +265,7 @@ export default function VideoPopup({
         type="button"
         onClick={() => handlePlaylistClick(i)}
         disabled={isActive}
-        className={`w-full text-left flex gap-2.5 items-start px-2.5 py-2 border-l-2 transition-colors ${
+        className={`w-full text-left flex gap-3 items-start px-3 py-2.5 border-l-2 transition-colors ${
           isActive
             ? "bg-neutral-50 border-text-primary cursor-default"
             : "border-transparent hover:bg-neutral-50 hover:border-neutral-300"
@@ -273,22 +273,22 @@ export default function VideoPopup({
         aria-current={isActive ? "true" : undefined}
         aria-label={`Ir a: ${item.title}`}
       >
-        <div className="relative w-16 shrink-0 rounded-sm overflow-hidden bg-neutral-200" style={{ aspectRatio: "16/9" }}>
+        <div className="relative w-24 shrink-0 rounded-sm overflow-hidden bg-neutral-200" style={{ aspectRatio: "16/9" }}>
           <img src={getYouTubeThumbnail(item.videoId)} alt="" aria-hidden="true" className="w-full h-full object-cover" />
           {isActive && (
             <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-              <svg className="w-3 h-3 text-white drop-shadow" viewBox="0 0 24 24" fill="currentColor">
+              <svg className="w-4 h-4 text-white drop-shadow" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8 5v14l11-7z" />
               </svg>
             </div>
           )}
         </div>
-        <div className="min-w-0 pt-px">
-          <p className={`font-heading text-xs leading-tight truncate ${isActive ? "text-text-primary font-semibold" : "text-text-primary/80"}`}>
+        <div className="min-w-0 pt-0.5">
+          <p className={`font-heading text-sm leading-tight truncate ${isActive ? "text-text-primary font-semibold" : "text-text-primary/80"}`}>
             {item.title}
           </p>
           {item.category && (
-            <p className="font-body text-[0.55rem] text-text-secondary/40 uppercase tracking-wider mt-0.5 truncate">
+            <p className="font-body text-xs text-text-secondary/40 uppercase tracking-wider mt-1 truncate">
               {item.category}
             </p>
           )}
@@ -343,7 +343,7 @@ export default function VideoPopup({
       aria-modal="true"
       aria-label={`Video: ${title}`}
     >
-      <div className={`flex gap-3 items-start ${isMobile ? "w-full" : "w-full max-w-6xl"}`}>
+      <div className={`flex gap-3 items-stretch ${isMobile ? "w-full" : "w-full max-w-6xl"}`}>
 
         {/* ── Main modal card ─────────────────────────────────────────── */}
         <div
@@ -494,10 +494,9 @@ export default function VideoPopup({
         {/* ── Desktop playlist sidebar ─────────────────────────────────── */}
         {showSidebarPlaylist && (
           <div
-            className="w-52 shrink-0 bg-white rounded-sm shadow-2xl overflow-hidden flex flex-col animate-in fade-in slide-in-from-right-4 duration-300"
-            style={{ maxHeight: maxH }}
+            className="w-72 shrink-0 bg-white rounded-sm shadow-2xl overflow-hidden flex flex-col animate-in fade-in slide-in-from-right-4 duration-300"
           >
-            <div className="shrink-0 px-3 py-2.5 border-b border-neutral-100">
+            <div className="shrink-0 px-4 py-3 border-b border-neutral-100">
               <p className="font-body text-[0.6rem] tracking-widest text-text-secondary/40 uppercase">
                 Playlist
               </p>
