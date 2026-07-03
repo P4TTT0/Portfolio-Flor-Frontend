@@ -97,6 +97,11 @@ export default function SamplesSection({
 
   // Ref to WaveformPlayer for programmatic play/pause
   const waveformRef = useRef<WaveformPlayerHandle | null>(null);
+  const autoAdvanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  // Set to true before changing activeTrackUrl via auto-advance so the
+  // useEffect below can trigger play() after WaveformPlayer's effects settle
+  const autoPlayNextRef = useRef(false);
 
   // Filtered tracks
   const filteredTracks = useMemo(
@@ -104,9 +109,18 @@ export default function SamplesSection({
     [enrichedSamples, activeCategory],
   );
 
+  const cancelAutoAdvance = useCallback(() => {
+    if (autoAdvanceTimerRef.current) {
+      clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = null;
+    }
+    autoPlayNextRef.current = false;
+  }, []);
+
   // Track-item play/pause handler
   const handlePlayPause = useCallback(
     (track: SampleItem) => {
+      cancelAutoAdvance();
       const url = track.audioUrl;
 
       if (!url) return; // no-audio track — button is disabled anyway
@@ -128,7 +142,7 @@ export default function SamplesSection({
         });
       }
     },
-    [activeTrackUrl],
+    [activeTrackUrl, cancelAutoAdvance],
   );
 
   // Waveform playback state callback
@@ -137,12 +151,59 @@ export default function SamplesSection({
     setIsWaveformPlaying(playing);
   }, []);
 
+  // Auto-advance: called by WaveformPlayer when track ends naturally
+  const handleTrackEnded = useCallback(() => {
+    const currentIdx = filteredTracks.findIndex(
+      (t) => t.audioUrl === activeTrackUrl,
+    );
+    if (currentIdx < 0 || currentIdx >= filteredTracks.length - 1) return;
+
+    const nextTrack = filteredTracks[currentIdx + 1];
+    if (!nextTrack.audioUrl) return;
+
+    autoAdvanceTimerRef.current = setTimeout(() => {
+      autoAdvanceTimerRef.current = null;
+      autoPlayNextRef.current = true;
+      setActiveTrackUrl(nextTrack.audioUrl);
+    }, 1000);
+  }, [filteredTracks, activeTrackUrl]);
+
+  // Pause audio when scrolling away from this section
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          cancelAutoAdvance();
+          waveformRef.current?.pause();
+        }
+      },
+      { threshold: 0.5 },
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [cancelAutoAdvance]);
+
+  // Fires after WaveformPlayer's useEffect([audioUrl]) has already run —
+  // React guarantees children effects settle before parent effects.
+  // By this point the buffer is cleared and play() will fetch + decode the new track.
+  useEffect(() => {
+    if (!autoPlayNextRef.current || !activeTrackUrl) return;
+    autoPlayNextRef.current = false;
+    waveformRef.current?.play();
+  }, [activeTrackUrl]);
+
   // Category tab change — reset track selection
-  const handleTabChange = useCallback((cat: string) => {
-    setActiveCategory(cat);
-    setActiveTrackUrl(null);
-    setIsWaveformPlaying(false);
-  }, []);
+  const handleTabChange = useCallback(
+    (cat: string) => {
+      cancelAutoAdvance();
+      setActiveCategory(cat);
+      setActiveTrackUrl(null);
+      setIsWaveformPlaying(false);
+    },
+    [cancelAutoAdvance],
+  );
 
   // Edge case: empty samples
   if (enrichedSamples.length === 0) {
@@ -167,6 +228,7 @@ export default function SamplesSection({
 
   return (
     <section
+      ref={sectionRef}
       id={id}
       className="snap-start h-dvh flex items-center justify-center p-2 sm:p-4 relative"
     >
@@ -194,6 +256,7 @@ export default function SamplesSection({
           ref={waveformRef}
           audioUrl={activeTrackUrl}
           onPlayStateChange={handlePlayStateChange}
+          onEnded={handleTrackEnded}
         />
       </FolderPapers>
 

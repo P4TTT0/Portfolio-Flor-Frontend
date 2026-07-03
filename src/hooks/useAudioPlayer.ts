@@ -60,7 +60,10 @@ const peaksCache = new Map<string, number[]>();
 // Hook
 // ---------------------------------------------------------------------------
 
-export function useAudioPlayer(audioUrl: string): UseAudioPlayerReturn {
+export function useAudioPlayer(audioUrl: string, onEnded?: () => void): UseAudioPlayerReturn {
+  const onEndedRef = useRef(onEnded);
+  onEndedRef.current = onEnded;
+
   const audioContextRef = useRef<AudioContext | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
   const sourceNodeRef = useRef<AudioBufferSourceNode | null>(null);
@@ -194,6 +197,7 @@ export function useAudioPlayer(audioUrl: string): UseAudioPlayerReturn {
         setCurrentTime(0);
         pauseOffsetRef.current = 0;
         sourceNodeRef.current = null;
+        onEndedRef.current?.();
       }
     };
 
@@ -247,6 +251,7 @@ export function useAudioPlayer(audioUrl: string): UseAudioPlayerReturn {
             setCurrentTime(0);
             pauseOffsetRef.current = 0;
             sourceNodeRef.current = null;
+            onEndedRef.current?.();
           }
         };
 

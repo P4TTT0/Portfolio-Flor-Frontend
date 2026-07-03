@@ -1,11 +1,8 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import type { SampleItem } from "@/lib/use-sanity-content";
 import TrackItem from "@/components/samples/TrackItem";
-
-// ---------------------------------------------------------------------------
-// TrackList
-// ---------------------------------------------------------------------------
 
 interface TrackListProps {
   tracks: SampleItem[];
@@ -20,6 +17,13 @@ export default function TrackList({
   isWaveformPlaying,
   onPlayPause,
 }: TrackListProps) {
+  const activeItemRef = useRef<HTMLDivElement>(null);
+
+  // Scroll active track into view when it changes (e.g. auto-advance)
+  useEffect(() => {
+    activeItemRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [activeTrackUrl]);
+
   if (tracks.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center px-4">
@@ -40,18 +44,24 @@ export default function TrackList({
       <div className="flex flex-col gap-0.5 py-2">
         {tracks.map((track) => {
           const hasAudio = !!track.audioUrl;
-          const isThisActive = activeTrackUrl === track.audioUrl;
+          const isThisActive = activeTrackUrl === track.audioUrl && hasAudio;
           const isThisPlaying = isThisActive && isWaveformPlaying;
 
           return (
-            <TrackItem
+            <div
               key={track.title || track.audioUrl}
-              title={track.title}
-              duration={track.duration}
-              isPlaying={isThisPlaying}
-              hasAudio={hasAudio}
-              onPlayPause={() => onPlayPause(track)}
-            />
+              ref={isThisActive ? activeItemRef : undefined}
+            >
+              <TrackItem
+                title={track.title}
+                duration={track.duration}
+                isActive={isThisActive}
+                isPlaying={isThisPlaying}
+                selectionKey={isThisActive ? activeTrackUrl : null}
+                hasAudio={hasAudio}
+                onPlayPause={() => onPlayPause(track)}
+              />
+            </div>
           );
         })}
       </div>

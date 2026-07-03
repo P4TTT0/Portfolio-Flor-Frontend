@@ -21,10 +21,12 @@ interface WaveformPlayerProps {
   audioUrl: string | null;
   /** Called whenever internal play/pause state changes (for parent coordination). */
   onPlayStateChange?: (isPlaying: boolean) => void;
+  /** Called when the track finishes playing naturally (not on manual pause/stop). */
+  onEnded?: () => void;
 }
 
 const WaveformPlayer = forwardRef<WaveformPlayerHandle, WaveformPlayerProps>(
-  function WaveformPlayer({ audioUrl, onPlayStateChange }, ref) {
+  function WaveformPlayer({ audioUrl, onPlayStateChange, onEnded }, ref) {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   const {
@@ -39,7 +41,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, WaveformPlayerProps>(
     pause,
     seek,
     setVolume,
-  } = useAudioPlayer(audioUrl ?? "");
+  } = useAudioPlayer(audioUrl ?? "", onEnded);
 
   // Expose play / pause to parent
   useImperativeHandle(
