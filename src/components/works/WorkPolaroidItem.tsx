@@ -10,7 +10,6 @@ interface WorkPolaroidItemProps {
   work: WorkItem;
   rotation?: number;
   floatDuration?: number;
-  size?: "default" | "compact";
   reverse?: boolean;
   onPlay?: () => void;
 }
@@ -27,7 +26,6 @@ export default function WorkPolaroidItem({
   work,
   rotation = -8,
   floatDuration = 4,
-  size = "default",
   reverse = false,
   onPlay,
 }: WorkPolaroidItemProps) {
@@ -37,17 +35,13 @@ export default function WorkPolaroidItem({
 
   if (!videoId) return null;
 
-  const isCompact = size === "compact";
-
   return (
     <>
       <button
         type="button"
         onClick={() => onPlay ? onPlay() : setIsOpen(true)}
-        className={`group cursor-pointer text-left ${
-          isCompact
-            ? "flex flex-col items-center gap-3"
-            : `flex flex-col items-center gap-8 sm:gap-14 lg:gap-20 ${reverse ? "sm:flex-row-reverse" : "sm:flex-row"}`
+        className={`group cursor-pointer text-left flex flex-col items-center gap-8 sm:gap-14 lg:gap-20 ${
+          reverse ? "sm:flex-row-reverse" : "sm:flex-row"
         }`}
         aria-label={`Ver trabajo: ${work.title}`}
       >
@@ -66,11 +60,9 @@ export default function WorkPolaroidItem({
           <div
             style={{
               position: "relative",
-              width: isCompact ? 140 : "clamp(200px, 28vw, 340px)",
+              width: "clamp(200px, 28vw, 340px)",
               aspectRatio: "5 / 6",
-              animation: isCompact
-                ? "none"
-                : `polaroid-float ${floatDuration}s ease-in-out infinite`,
+              animation: `polaroid-float ${floatDuration}s ease-in-out infinite`,
               animationDelay: "0.8s",
             }}
           >
@@ -92,7 +84,7 @@ export default function WorkPolaroidItem({
                   alt={work.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes={isCompact ? "140px" : "(max-width: 640px) 200px, 28vw"}
+                  sizes="(max-width: 640px) 200px, 28vw"
                 />
               </div>
             )}
@@ -116,13 +108,13 @@ export default function WorkPolaroidItem({
         </div>
 
         {/* Text */}
-        <div className={isCompact ? "text-center" : "text-center sm:text-left"}>
+        <div className="text-center sm:text-left">
           <p
             className="text-text-primary leading-tight"
             style={{
               fontFamily: "var(--font-space-grotesk)",
               fontWeight: 700,
-              fontSize: isCompact ? "1rem" : "clamp(1.6rem, 3.5vw, 2.8rem)",
+              fontSize: "clamp(1.6rem, 3.5vw, 2.8rem)",
             }}
           >
             {work.title}
@@ -132,7 +124,7 @@ export default function WorkPolaroidItem({
             style={{
               fontFamily: "var(--font-space-grotesk)",
               fontWeight: 300,
-              fontSize: isCompact ? "0.8rem" : "clamp(1rem, 2vw, 1.6rem)",
+              fontSize: "clamp(1rem, 2vw, 1.6rem)",
             }}
           >
             {work.category}
@@ -142,7 +134,7 @@ export default function WorkPolaroidItem({
             style={{
               fontFamily: "var(--font-space-grotesk)",
               fontWeight: 300,
-              fontSize: isCompact ? "0.8rem" : "clamp(1rem, 2vw, 1.6rem)",
+              fontSize: "clamp(1rem, 2vw, 1.6rem)",
             }}
           >
             {work.country}

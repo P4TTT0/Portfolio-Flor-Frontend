@@ -20,9 +20,22 @@ export function extractYouTubeId(url: string): string | null {
 /**
  * Get YouTube thumbnail URL for a video ID.
  * Uses hqdefault (480x360) — always available, no API key needed.
+ *
+ * Note this is a 4:3 frame: YouTube letterboxes 16:9 video into it, so the
+ * image carries black bars top and bottom. Cropping it with `object-cover`
+ * inside a 16:9 box removes exactly those bars.
  */
 export function getYouTubeThumbnail(videoId: string): string {
   return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+}
+
+/**
+ * Get the high-resolution thumbnail (1280x720, true 16:9 with no letterboxing).
+ * Not generated for every video, so callers must fall back to
+ * `getYouTubeThumbnail` when it 404s.
+ */
+export function getYouTubeThumbnailHd(videoId: string): string {
+  return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
 }
 
 /**

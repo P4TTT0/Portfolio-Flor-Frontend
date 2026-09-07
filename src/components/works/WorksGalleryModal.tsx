@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import WorkPolaroidItem from "@/components/works/WorkPolaroidItem";
+import WorksGalleryGrid from "@/components/works/WorksGalleryGrid";
 import VideoPopup from "@/components/demos/VideoPopup";
 import { extractYouTubeId } from "@/lib/youtube-utils";
 import type { WorkItem } from "@/lib/use-sanity-content";
@@ -11,8 +11,6 @@ interface WorksGalleryModalProps {
   works: WorkItem[];
   onClose: () => void;
 }
-
-const ROTATIONS = [-5, 4, -3, 6, -4, 3];
 
 export default function WorksGalleryModal({ works, onClose }: WorksGalleryModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -45,9 +43,15 @@ export default function WorksGalleryModal({ works, onClose }: WorksGalleryModalP
       aria-modal="true"
       aria-label="Galería de trabajos"
     >
-      <div className="relative bg-white rounded-sm shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-300">
+      {/*
+        Fixed height, not `max-h`: with only a few works a content-sized panel
+        would grow every time the hover expansion made a row taller, so the
+        whole dialog breathed along with the animation. Pinning it hands that
+        growth to the scroll area below instead.
+      */}
+      <div className="relative bg-cream rounded-sm shadow-2xl w-full max-w-6xl h-[90dvh] flex flex-col animate-in fade-in zoom-in duration-300">
         {/* Header */}
-        <div className="shrink-0 border-b border-neutral-200 px-6 py-4 flex items-center justify-between">
+        <div className="shrink-0 border-b border-text-primary/10 px-6 py-4 flex items-center justify-between">
           <h2 className="font-heading text-xl sm:text-2xl text-text-primary">
             Todos los trabajos
           </h2>
@@ -63,20 +67,13 @@ export default function WorksGalleryModal({ works, onClose }: WorksGalleryModalP
           </button>
         </div>
 
-        {/* Grid */}
-        <div className="overflow-y-auto p-8 sm:p-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 sm:gap-12">
-            {works.map((work, i) => (
-              <div key={work.title + i} className="flex justify-center">
-                <WorkPolaroidItem
-                  work={work}
-                  rotation={ROTATIONS[i % ROTATIONS.length]}
-                  size="compact"
-                  onPlay={() => setSelectedIndex(i)}
-                />
-              </div>
-            ))}
-          </div>
+        {/*
+          Owns all the leftover height. The padding is also what a scaled tile
+          on the outer edge of the grid grows into before this container's
+          overflow clips it.
+        */}
+        <div className="flex-1 min-h-0 overflow-y-auto p-6 sm:p-10">
+          <WorksGalleryGrid works={works} onPlay={setSelectedIndex} />
         </div>
       </div>
     </div>
