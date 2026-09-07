@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Lato, Archivo_Black, League_Spartan, Cormorant_Garamond, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
@@ -40,6 +40,17 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "Florencia Acevedo — Locutora Nacional",
   description: "Portfolio de Florencia Acevedo, Locutora Nacional",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // Keep the virtual keyboard out of the layout viewport. Otherwise it shrinks
+  // every `h-dvh` section, and the contact card — vertically centred — climbs
+  // into the hanging phone decoration hanging off the top of the section.
+  // With `resizes-visual` the browser pans the visual viewport instead, so
+  // nothing reflows while a field is focused.
+  interactiveWidget: "resizes-visual",
 };
 
 export default function RootLayout({

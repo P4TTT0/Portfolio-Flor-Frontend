@@ -12,8 +12,11 @@ interface FormData {
   message: string;
 }
 
+// 16px on the mobile layout: iOS Safari auto-zooms into any focused field
+// under that size and never zooms back out. The breakpoint matches the
+// mobile/desktop split of this form (md), not Tailwind's default sm.
 const inputClass =
-  "w-full bg-transparent border-0 border-b border-neutral-400/40 pb-2 pt-1 text-sm font-body text-neutral-700 placeholder:text-neutral-400/70 focus:outline-none focus:border-neutral-600/60 transition-colors";
+  "w-full bg-transparent border-0 border-b border-neutral-400/40 pb-2 pt-1 text-base md:text-sm font-body text-neutral-700 placeholder:text-neutral-400/70 focus:outline-none focus:border-neutral-600/60 transition-colors";
 
 export default function ContactForm() {
   const [state, setState] = useState<FormState>("idle");
