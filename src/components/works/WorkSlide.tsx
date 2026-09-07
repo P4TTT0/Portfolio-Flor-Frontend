@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import SectionTitleOverlay from "@/components/ui/SectionTitleOverlay";
 import WorkPolaroidItem from "@/components/works/WorkPolaroidItem";
 import WorksGalleryModal from "@/components/works/WorksGalleryModal";
 import type { WorkItem } from "@/lib/use-sanity-content";
@@ -15,7 +14,6 @@ interface WorkSlideProps {
   rotation: number;
   floatDuration?: number;
   reverse?: boolean;
-  showTitle?: boolean;
   isLast: boolean;
   allWorks: WorkItem[];
 }
@@ -26,7 +24,6 @@ export default function WorkSlide({
   rotation,
   floatDuration,
   reverse = false,
-  showTitle,
   isLast,
   allWorks,
 }: WorkSlideProps) {
@@ -134,10 +131,6 @@ export default function WorkSlide({
           >
             Ver todos los trabajos
           </button>
-        )}
-
-        {showTitle && (
-          <SectionTitleOverlay imageSrc="/assets/animated/trabajos-title.png" />
         )}
       </section>
 
