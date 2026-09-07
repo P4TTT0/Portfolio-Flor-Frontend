@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { getYouTubeEmbedUrl, getYouTubeThumbnail } from "@/lib/youtube-utils";
 import useBreakpoint, { type Breakpoint } from "@/hooks/useBreakpoint";
@@ -34,6 +34,19 @@ const TAPE_CONFIG: Record<Breakpoint, { width: number; height: number }> = {
 
 const LINE_H = 28;
 const AUTO_ADVANCE_DELAY = 3;
+
+// Overlay padding, in px, per breakpoint: `p-2` on mobile, `p-6` above it.
+// The card's max-height is derived from these so the two never drift apart.
+const OVERLAY_PAD = { mobile: 16, desktop: 48 } as const;
+
+// Everything the ruled paper spends on height besides the header and the video:
+// padding-top (LINE_H * 2), the spacer above the video, the one below it, and
+// padding-bottom.
+const PAPER_CHROME = LINE_H * 2 + LINE_H + LINE_H + LINE_H;
+
+// Floor for the video on very short screens. Below this the paper scrolls
+// instead, which is the lesser evil.
+const MIN_VIDEO_H = 120;
 
 function NavArrow({
   direction,
@@ -107,15 +120,51 @@ export default function VideoPopup({
   const paperRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const activeItemRef = useRef<HTMLButtonElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const chromeRef = useRef<HTMLDivElement>(null);
 
   const hasNav = onPrev !== undefined || onNext !== undefined;
   const hasPlaylist = playlist && playlist.length > 1;
   const showSidebarPlaylist = !isMobile && hasPlaylist;
   const showMobilePlaylist = isMobile && hasPlaylist;
 
-  const maxH = isMobile ? "calc(100dvh - 1rem)" : "calc(100dvh - 3rem)";
+  const overlayPad = isMobile ? OVERLAY_PAD.mobile : OVERLAY_PAD.desktop;
+  const maxH = `calc(100dvh - ${overlayPad}px)`;
 
   const [countdown, setCountdown] = useState<number | null>(null);
+
+  // The video block is `aspect-video`, so its height follows its width and
+  // ignores the viewport entirely — on a short screen it outgrows the card and
+  // the paper scrolls, cutting the video in half. Cap its width by whatever
+  // height is actually left over, keeping the 16:9 ratio intact.
+  const [videoMaxH, setVideoMaxH] = useState<number | null>(null);
+
+  useLayoutEffect(() => {
+    // Measured against the viewport rather than the card: the card is sized by
+    // its content, so reading its height here would feed the video's own size
+    // back into the calculation.
+    const measure = () => {
+      const headerH = headerRef.current?.offsetHeight ?? 0;
+      const chromeH = chromeRef.current?.offsetHeight ?? 0;
+      const available =
+        window.innerHeight - overlayPad - PAPER_CHROME - headerH - chromeH;
+      setVideoMaxH(Math.max(available, MIN_VIDEO_H));
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+
+    // The header grows when a title wraps, and the chrome grows when the
+    // countdown banner or the playlist strip appear.
+    const observer = new ResizeObserver(measure);
+    if (headerRef.current) observer.observe(headerRef.current);
+    if (chromeRef.current) observer.observe(chromeRef.current);
+
+    return () => {
+      window.removeEventListener("resize", measure);
+      observer.disconnect();
+    };
+  }, [overlayPad]);
 
   const embedOrigin = useState(
     () => (typeof window !== "undefined" ? window.location.origin : "")
@@ -253,7 +302,16 @@ export default function VideoPopup({
 
   const tape = TAPE_CONFIG[breakpoint];
   const contentPaddingLeft = isMobile ? "44px" : "clamp(52px, 9vw, 72px)";
+  const contentPaddingRight = isMobile ? "12px" : "clamp(16px, 4vw, 28px)";
   const marginLineLeft = isMobile ? "28px" : "clamp(36px, 7vw, 52px)";
+
+  // Once the video is limited by height it stops filling the paper's width, so
+  // the card has to narrow with it or the paper is left with dead margins.
+  // Derived from the same height budget, so it never disagrees with the video.
+  const cardMaxW =
+    videoMaxH === null
+      ? undefined
+      : `calc(${Math.round((videoMaxH * 16) / 9)}px + ${contentPaddingLeft} + ${contentPaddingRight})`;
 
   // ── Shared playlist item renderer ──────────────────────────────────────────
   const renderSidebarItem = (item: PlaylistItem, i: number) => {
@@ -343,12 +401,12 @@ export default function VideoPopup({
       aria-modal="true"
       aria-label={`Video: ${title}`}
     >
-      <div className={`flex gap-3 items-stretch ${isMobile ? "w-full" : "w-full max-w-6xl"}`}>
+      <div className={`flex gap-3 items-stretch justify-center ${isMobile ? "w-full" : "w-full max-w-6xl"}`}>
 
         {/* ── Main modal card ─────────────────────────────────────────── */}
         <div
           className="relative flex flex-col bg-white rounded-sm shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300 flex-1 min-w-0"
-          style={{ maxHeight: maxH }}
+          style={{ maxHeight: maxH, maxWidth: cardMaxW }}
         >
           {/* Tape */}
           <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
@@ -378,7 +436,7 @@ export default function VideoPopup({
               paddingTop: LINE_H * 2,
               paddingBottom: LINE_H,
               paddingLeft: contentPaddingLeft,
-              paddingRight: isMobile ? "12px" : "clamp(16px, 4vw, 28px)",
+              paddingRight: contentPaddingRight,
               backgroundImage: `repeating-linear-gradient(
                 to bottom,
                 transparent,
@@ -393,25 +451,37 @@ export default function VideoPopup({
               style={{ left: marginLineLeft }}
               aria-hidden="true"
             />
-            <h3
-              className="font-heading text-text-primary font-semibold pr-12"
-              style={{
-                fontSize: isMobile ? "1rem" : "clamp(0.95rem, 2vw, 1.2rem)",
-                lineHeight: `${LINE_H}px`,
-              }}
-            >
-              {title}
-            </h3>
-            {category && (
-              <p
-                className="font-body text-text-secondary/60 uppercase tracking-widest"
-                style={{ fontSize: "0.6rem", lineHeight: `${LINE_H}px` }}
+            <div ref={headerRef}>
+              <h3
+                className="font-heading text-text-primary font-semibold pr-12"
+                style={{
+                  fontSize: isMobile ? "1rem" : "clamp(0.95rem, 2vw, 1.2rem)",
+                  lineHeight: `${LINE_H}px`,
+                }}
               >
-                {category}
-              </p>
-            )}
+                {title}
+              </h3>
+              {category && (
+                <p
+                  className="font-body text-text-secondary/60 uppercase tracking-widest"
+                  style={{ fontSize: "0.6rem", lineHeight: `${LINE_H}px` }}
+                >
+                  {category}
+                </p>
+              )}
+            </div>
             <div style={{ height: LINE_H }} aria-hidden="true" />
-            <div className="relative aspect-video bg-neutral-900 rounded-sm overflow-hidden shadow-md">
+            <div
+              className="relative aspect-video bg-neutral-900 rounded-sm overflow-hidden shadow-md mx-auto"
+              style={
+                videoMaxH === null
+                  ? undefined
+                  : // Width-driven so `aspect-video` keeps the ratio; the height
+                    // budget is folded into the width instead of clamping the
+                    // box, which would letterbox it.
+                    { width: `min(100%, ${Math.round((videoMaxH * 16) / 9)}px)` }
+              }
+            >
               <iframe
                 ref={iframeRef}
                 src={`${getYouTubeEmbedUrl(videoId)}${embedOrigin ? `&origin=${encodeURIComponent(embedOrigin)}` : ""}`}
@@ -425,9 +495,13 @@ export default function VideoPopup({
             <div style={{ height: LINE_H }} aria-hidden="true" />
           </div>
 
+          {/* Bars below the paper. Always rendered so the ref is stable — the
+              height budget above depends on measuring whatever is in here. */}
+          <div ref={chromeRef} className="shrink-0">
+
           {/* Auto-advance countdown banner */}
           {countdown !== null && (
-            <div className="shrink-0 border-t border-neutral-100 bg-neutral-50/80 animate-in fade-in slide-in-from-bottom-1 duration-200">
+            <div className="border-t border-neutral-100 bg-neutral-50/80 animate-in fade-in slide-in-from-bottom-1 duration-200">
               <div className="h-0.5 bg-neutral-200">
                 <div
                   className="h-full bg-text-secondary/50 transition-[width] duration-1000 ease-linear"
@@ -451,7 +525,7 @@ export default function VideoPopup({
 
           {/* Nav bar */}
           {hasNav && (
-            <div className="shrink-0 px-4 py-3 flex items-center justify-between border-t border-neutral-100 bg-white">
+            <div className="px-4 py-3 flex items-center justify-between border-t border-neutral-100 bg-white">
               <NavArrow
                 direction="left"
                 onClick={() => handleNav("left", onPrev)}
@@ -476,7 +550,7 @@ export default function VideoPopup({
 
           {/* Mobile playlist — horizontal scroll strip inside the card */}
           {showMobilePlaylist && (
-            <div className="shrink-0 border-t border-neutral-100 bg-white">
+            <div className="border-t border-neutral-100 bg-white">
               <div className="px-3 pt-2 pb-0.5">
                 <p className="font-body text-[0.55rem] tracking-widest text-text-secondary/40 uppercase">
                   Playlist
@@ -489,12 +563,18 @@ export default function VideoPopup({
               </div>
             </div>
           )}
+
+          </div>
         </div>
 
         {/* ── Desktop playlist sidebar ─────────────────────────────────── */}
         {showSidebarPlaylist && (
           <div
             className="w-72 shrink-0 bg-white rounded-sm shadow-2xl overflow-hidden flex flex-col animate-in fade-in slide-in-from-right-4 duration-300"
+            // Without a cap the sidebar's full list sets the flex line height,
+            // dragging the whole row past the viewport once the playlist is
+            // long enough. The card alone being capped is not sufficient.
+            style={{ maxHeight: maxH }}
           >
             <div className="shrink-0 px-4 py-3 border-b border-neutral-100">
               <p className="font-body text-[0.6rem] tracking-widest text-text-secondary/40 uppercase">
