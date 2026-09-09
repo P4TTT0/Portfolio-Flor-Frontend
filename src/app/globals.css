@@ -64,6 +64,56 @@
 .sound-bar-anim:nth-child(2) { animation-delay: 233ms; }
 .sound-bar-anim:nth-child(3) { animation-delay: 116ms; }
 
+/* --- Ransom letters: stop-motion boil --- */
+
+/*
+  Stop motion reads as SNAP, never glide: a low frame rate holds each pose, then
+  jumps to the next one. `steps(1, end)` does exactly that — it holds a
+  keyframe's value for its whole segment and switches at the boundary — so the
+  four poses below play back as four discrete frames. Easing here would look
+  like the letters were floating, which is the opposite effect.
+
+  Every letter supplies its own base angle, amplitude, duration and delay, so
+  the wobble never settles into a rhythm you can read as a group.
+*/
+@keyframes ransom-boil {
+  0%,
+  100% {
+    transform: rotate(calc(var(--boil-base) + var(--boil-amp) * 1))
+      translate(0, 0) scale(var(--boil-scale));
+  }
+  25% {
+    transform: rotate(calc(var(--boil-base) + var(--boil-amp) * -0.55))
+      translate(0.6px, -0.5px) scale(calc(var(--boil-scale) * 1.008));
+  }
+  50% {
+    transform: rotate(calc(var(--boil-base) + var(--boil-amp) * -1))
+      translate(-0.5px, 0.4px) scale(var(--boil-scale));
+  }
+  75% {
+    transform: rotate(calc(var(--boil-base) + var(--boil-amp) * 0.5))
+      translate(0.4px, 0.6px) scale(calc(var(--boil-scale) * 0.993));
+  }
+}
+
+.ransom-letter {
+  animation: ransom-boil var(--boil-duration) steps(1, end) infinite;
+  animation-delay: var(--boil-delay);
+  will-change: transform;
+}
+
+/*
+  Killing the animation hands the element back to its inline transform, which
+  already carries the letter's resting angle and scale — so the name simply
+  stops moving instead of snapping to a different pose.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .ransom-letter {
+    animation: none;
+  }
+}
+
+
 
 body {
   color: var(--foreground);
