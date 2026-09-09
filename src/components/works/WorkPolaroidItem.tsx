@@ -79,13 +79,36 @@ export default function WorkPolaroidItem({
                   zIndex: 0,
                 }}
               >
-                <Image
-                  src={thumbnail}
-                  alt={work.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 640px) 200px, 28vw"
-                />
+                {/*
+                  The photo area is near square (0.844W wide by 0.858W tall), so
+                  `object-cover` alone would fit the 4:3 thumbnail by height and
+                  crop the sides, keeping YouTube's letterbox bars on screen.
+
+                  This 16:9 window fixes that. It is sized off the photo area's
+                  height, so it always overflows horizontally and is clipped by
+                  the parent. `object-cover` inside it fits the 4:3 source by
+                  width instead, pushing the bars out of frame. A 16:9 source
+                  (maxresdefault) fills the window exactly, so the wrapper stays
+                  correct whichever thumbnail variant is used.
+                */}
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    bottom: 0,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    aspectRatio: "16 / 9",
+                  }}
+                >
+                  <Image
+                    src={thumbnail}
+                    alt={work.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 640px) 320px, 43vw"
+                  />
+                </div>
               </div>
             )}
 
