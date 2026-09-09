@@ -81,6 +81,16 @@ body {
   }
 }
 
+/* Tailwind v4's preflight no longer applies `cursor: pointer` to buttons the
+   way v3 did, so every control falls back to the default arrow. Restore it in
+   one place instead of repeating `cursor-pointer` on each interactive element. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+}
+
 /* --- Craft textures --- */
 
 .kraft-texture {
