@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import type { DemoItem } from "@/lib/use-sanity-content";
+import type { DemoItem } from "@/lib/content";
 import DemoCard from "@/components/demos/DemoCard";
 import VideoPopup from "@/components/demos/VideoPopup";
 import SectionTitleOverlay from "@/components/ui/SectionTitleOverlay";
@@ -89,6 +89,7 @@ export default function DemosSection({ id, demos }: DemosSectionProps) {
       id={id}
       className="snap-start h-dvh relative overflow-hidden"
     >
+      <h2 className="sr-only">Demos de locución</h2>
       {/* Solid background — full viewport height */}
       <div className="absolute inset-0 bg-avocado" aria-hidden="true" />
 
@@ -114,7 +115,7 @@ export default function DemosSection({ id, demos }: DemosSectionProps) {
         >
           {/* Pizarra background image — absolute, just visual */}
           <Image
-            src="/assets/elements/pizarra.png"
+            src="/assets/elements/pizarra.webp"
             alt="Pizarra de demos"
             width={DESIGN_WIDTH}
             height={DESIGN_HEIGHT}
@@ -125,7 +126,9 @@ export default function DemosSection({ id, demos }: DemosSectionProps) {
 
           {/* Paper star decoration — absolute within pizarra container */}
           <img
-            src="/assets/elements/paper-star.png"
+          loading="lazy"
+          decoding="async"
+            src="/assets/elements/paper-star.webp"
             alt=""
             className="absolute pointer-events-none"
             style={{
@@ -159,7 +162,7 @@ export default function DemosSection({ id, demos }: DemosSectionProps) {
         </div>
       </div>
 
-      <SectionTitleOverlay imageSrc="/assets/animated/demos-title.png" />
+      <SectionTitleOverlay imageSrc="/assets/animated/demos-title.webp" />
 
       {openIndex !== null && (() => {
         const demo = demos[openIndex];

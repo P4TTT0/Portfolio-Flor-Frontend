@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { extractYouTubeId, getYouTubeThumbnail } from "@/lib/youtube-utils";
 import VideoPopup from "@/components/demos/VideoPopup";
-import type { WorkItem } from "@/lib/use-sanity-content";
+import type { WorkItem } from "@/lib/content";
 
 interface WorkPolaroidItemProps {
   work: WorkItem;
@@ -114,7 +114,9 @@ export default function WorkPolaroidItem({
 
             {/* Polaroid frame — above the thumbnail */}
             <img
-              src="/assets/elements/polaroid-frame-02.png"
+          loading="lazy"
+          decoding="async"
+              src="/assets/elements/polaroid-frame-02.webp"
               alt=""
               aria-hidden="true"
               style={{

@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import type { SocialItem } from "@/lib/use-sanity-content";
+import type { SocialItem } from "@/lib/content";
 import { getPlatformConfig } from "@/lib/platform-config";
 
 interface SocialCardProps {

@@ -153,7 +153,7 @@ export default function BioCard({ bio, picture }: BioCardProps) {
           }}
         >
           <img
-            src="/assets/elements/paper.png"
+            src="/assets/elements/paper.webp"
             alt=""
             aria-hidden="true"
             style={{
@@ -193,7 +193,7 @@ export default function BioCard({ bio, picture }: BioCardProps) {
         </div>
 
         <img
-          src="/assets/elements/stars.png"
+          src="/assets/elements/stars.webp"
           alt=""
           aria-hidden="true"
           style={{
@@ -272,7 +272,7 @@ export default function BioCard({ bio, picture }: BioCardProps) {
         )}
 
         <img
-          src="/assets/elements/polaroid-frame.png"
+          src="/assets/elements/polaroid-frame.webp"
           alt=""
           aria-hidden="true"
           style={{
@@ -294,7 +294,7 @@ export default function BioCard({ bio, picture }: BioCardProps) {
         />
 
         <img
-          src="/assets/elements/clip.png"
+          src="/assets/elements/clip.webp"
           alt=""
           aria-hidden="true"
           style={{

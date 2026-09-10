@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import WorksGalleryGrid from "@/components/works/WorksGalleryGrid";
 import VideoPopup from "@/components/demos/VideoPopup";
 import { extractYouTubeId } from "@/lib/youtube-utils";
-import type { WorkItem } from "@/lib/use-sanity-content";
+import type { WorkItem } from "@/lib/content";
 
 interface WorksGalleryModalProps {
   works: WorkItem[];

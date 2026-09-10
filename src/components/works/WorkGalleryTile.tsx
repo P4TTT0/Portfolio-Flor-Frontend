@@ -7,7 +7,7 @@ import {
   getYouTubeThumbnail,
   getYouTubeThumbnailHd,
 } from "@/lib/youtube-utils";
-import type { WorkItem } from "@/lib/use-sanity-content";
+import type { WorkItem } from "@/lib/content";
 
 interface WorkGalleryTileProps {
   work: WorkItem;

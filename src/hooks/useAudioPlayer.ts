@@ -62,7 +62,14 @@ const peaksCache = new Map<string, number[]>();
 
 export function useAudioPlayer(audioUrl: string, onEnded?: () => void): UseAudioPlayerReturn {
   const onEndedRef = useRef(onEnded);
-  onEndedRef.current = onEnded;
+  // Assigned in an effect, not during render: a render can be started and then
+  // thrown away (StrictMode, a concurrent re-render), and mutating a ref on that
+  // discarded pass leaves it holding a value that was never committed. Every
+  // reader below runs from a timer or an event handler, i.e. after commit, so
+  // updating here is soon enough.
+  useEffect(() => {
+    onEndedRef.current = onEnded;
+  });
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
@@ -77,10 +84,28 @@ export function useAudioPlayer(audioUrl: string, onEnded?: () => void): UseAudio
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [peaks, setPeaks] = useState<number[]>([]);
+  const [peaks, setPeaks] = useState<number[]>(() => peaksCache.get(audioUrl) ?? []);
   const [volume, setVolumeState] = useState(0.8);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // React's documented way to reset state when an input changes: adjust it
+  // during render rather than from an effect. The effect version needs a second
+  // render pass, and between the two the UI paints one frame still showing the
+  // PREVIOUS track's duration and waveform. Peaks are seeded from the cache in
+  // the same pass, so returning to an already-decoded track draws its waveform
+  // with no flash of an empty one.
+  //
+  // The effect below keeps the parts that are genuinely side effects: tearing
+  // down the audio graph and fetching/decoding the new file.
+  const [loadedUrl, setLoadedUrl] = useState(audioUrl);
+  if (loadedUrl !== audioUrl) {
+    setLoadedUrl(audioUrl);
+    setDuration(0);
+    setPeaks(peaksCache.get(audioUrl) ?? []);
+    setIsPlaying(false);
+    setCurrentTime(0);
+  }
 
   // --- helpers ---
 
@@ -275,30 +300,27 @@ export function useAudioPlayer(audioUrl: string, onEnded?: () => void): UseAudio
 
   useEffect(() => {
     if (!audioUrl) {
-      setDuration(0);
-      setPeaks([]);
       bufferRef.current = null;
       return;
     }
 
-    // Reset playback state when URL changes
+    // Tear down the previous track's audio graph. The React state that goes
+    // with it was already reset during render, above.
     stopSource();
-    setIsPlaying(false);
-    setCurrentTime(0);
     pauseOffsetRef.current = 0;
     isPlayingRef.current = false;
     bufferRef.current = null; // clear old buffer so play() triggers loadAudio
 
-    // Serve cached peaks immediately if available
-    if (peaksCache.has(audioUrl)) {
-      setPeaks(peaksCache.get(audioUrl)!);
-    }
-
     let cancelled = false;
-    const ctx = getCtx();
-    if (!ctx) return;
 
+    // `getCtx()` reports unsupported browsers through `setError`, so calling it
+    // straight from the effect body is a synchronous setState during an effect.
+    // Moving it inside the async block defers that, and it also means the
+    // cleanup below is always registered — the early return used to skip it.
     (async () => {
+      const ctx = getCtx();
+      if (!ctx) return;
+
       try {
         const response = await fetch(audioUrl);
         if (!response.ok) return;

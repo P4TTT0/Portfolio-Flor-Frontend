@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
-import type { SampleItem } from "@/lib/use-sanity-content";
+import type { SampleItem } from "@/lib/content";
 import FolderPapers from "@/components/samples/FolderPapers";
 import TrackList from "@/components/samples/TrackList";
 import WaveformPlayer, {
@@ -93,7 +93,14 @@ export default function SamplesSection({
   const [activeTrackUrl, setActiveTrackUrl] = useState<string | null>(null);
   const [isWaveformPlaying, setIsWaveformPlaying] = useState(false);
   const isPlayingRef = useRef(false);
-  isPlayingRef.current = isWaveformPlaying;
+  // Assigned in an effect, not during render: a render can be started and then
+  // thrown away (StrictMode, a concurrent re-render), and mutating a ref on that
+  // discarded pass leaves it holding a value that was never committed. Every
+  // reader below runs from a timer or an event handler, i.e. after commit, so
+  // updating here is soon enough.
+  useEffect(() => {
+    isPlayingRef.current = isWaveformPlaying;
+  });
 
   // Ref to WaveformPlayer for programmatic play/pause
   const waveformRef = useRef<WaveformPlayerHandle | null>(null);
@@ -212,6 +219,7 @@ export default function SamplesSection({
         id={id}
         className="snap-start h-dvh flex items-center justify-center p-4 sm:p-6 relative"
       >
+        <h2 className="sr-only">Muestras de voz</h2>
         {/* Solid background — full viewport height */}
         <div className="absolute inset-0 bg-blush" aria-hidden="true" />
 
@@ -232,6 +240,7 @@ export default function SamplesSection({
       id={id}
       className="snap-start h-dvh flex items-center justify-center p-2 sm:p-4 relative"
     >
+      <h2 className="sr-only">Muestras de voz</h2>
       {/* Solid background — full viewport height */}
       <div className="absolute inset-0 bg-blush" aria-hidden="true" />
 
@@ -261,7 +270,7 @@ export default function SamplesSection({
       </FolderPapers>
 
       <SectionTitleOverlay
-        imageSrc="/assets/animated/muestras-title.png"
+        imageSrc="/assets/animated/muestras-title.webp"
       />
     </section>
   );

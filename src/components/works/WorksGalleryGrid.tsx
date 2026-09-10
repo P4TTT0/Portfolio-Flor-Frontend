@@ -2,7 +2,7 @@
 
 import useBreakpoint from "@/hooks/useBreakpoint";
 import WorkGalleryTile from "@/components/works/WorkGalleryTile";
-import type { WorkItem } from "@/lib/use-sanity-content";
+import type { WorkItem } from "@/lib/content";
 
 interface WorksGalleryGridProps {
   works: WorkItem[];

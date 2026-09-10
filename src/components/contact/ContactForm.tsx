@@ -147,7 +147,7 @@ export default function ContactForm() {
           right: "13vw",
           top: "25vh",
           bottom: "-60px",
-          backgroundImage: "url('/assets/elements/contact-paper.png')",
+          backgroundImage: "url('/assets/elements/contact-paper.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center top",
         }}
@@ -162,7 +162,7 @@ export default function ContactForm() {
         aria-hidden="true"
       >
         <Image
-          src="/assets/elements/phone-cable.png"
+          src="/assets/elements/phone-cable.webp"
           alt=""
           width={600}
           height={338}
@@ -177,7 +177,7 @@ export default function ContactForm() {
         aria-hidden="true"
       >
         <Image
-          src="/assets/elements/hanging-phone.png"
+          src="/assets/elements/hanging-phone.webp"
           alt=""
           width={545}
           height={660}
@@ -200,7 +200,7 @@ export default function ContactForm() {
           aria-hidden="true"
         >
           <Image
-            src="/assets/elements/hanging-phone.png"
+            src="/assets/elements/hanging-phone.webp"
             alt=""
             width={545}
             height={660}
@@ -220,7 +220,7 @@ export default function ContactForm() {
           aria-hidden="true"
         >
           <Image
-            src="/assets/elements/phone-cable.png"
+            src="/assets/elements/phone-cable.webp"
             alt=""
             width={600}
             height={338}
@@ -233,7 +233,7 @@ export default function ContactForm() {
           className="relative w-full max-w-sm rounded-2xl overflow-hidden"
           style={{
             zIndex: 1,
-            backgroundImage: "url('/assets/elements/contact-paper.png')",
+            backgroundImage: "url('/assets/elements/contact-paper.webp')",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

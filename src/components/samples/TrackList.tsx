@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { SampleItem } from "@/lib/use-sanity-content";
+import type { SampleItem } from "@/lib/content";
 import TrackItem from "@/components/samples/TrackItem";
 
 interface TrackListProps {

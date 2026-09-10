@@ -91,6 +91,8 @@ export default function SectionTitleOverlay({
         }}
       >
         <img
+          loading="lazy"
+          decoding="async"
           src={imageSrc}
           alt=""
           aria-hidden="true"

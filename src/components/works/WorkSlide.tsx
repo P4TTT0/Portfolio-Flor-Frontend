@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import WorkPolaroidItem from "@/components/works/WorkPolaroidItem";
 import WorksGalleryModal from "@/components/works/WorksGalleryModal";
-import type { WorkItem } from "@/lib/use-sanity-content";
+import type { WorkItem } from "@/lib/content";
 
 // How far the content exits in the opposite direction of entry (px)
 const EXIT_RANGE = 0.75; // fraction of viewport height at which exit is complete

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { SocialItem } from "@/lib/use-sanity-content";
+import type { SocialItem } from "@/lib/content";
 import SocialCard from "@/components/social/SocialCard";
 import SectionTitleOverlay from "@/components/ui/SectionTitleOverlay";
 
@@ -68,6 +68,7 @@ export default function SocialSection({ id, social }: SocialSectionProps) {
       id={id} 
       className="snap-start h-dvh flex items-center justify-center relative overflow-hidden"
     >
+      <h2 className="sr-only">Redes sociales</h2>
       {/* Solid background — full viewport height */}
       <div className="absolute inset-0 bg-sage" aria-hidden="true" />
 
@@ -87,7 +88,7 @@ export default function SocialSection({ id, social }: SocialSectionProps) {
       </div>
 
       <SectionTitleOverlay
-        imageSrc="/assets/animated/redes-title.png"
+        imageSrc="/assets/animated/redes-title.webp"
       />
     </section>
   );

@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import SectionTitleOverlay from "@/components/ui/SectionTitleOverlay";
 import WorkSlide from "@/components/works/WorkSlide";
-import type { WorkItem } from "@/lib/use-sanity-content";
+import type { WorkItem } from "@/lib/content";
 
 interface WorksSectionProps {
   id: string;
@@ -25,11 +25,12 @@ export default function WorksSection({ id, works }: WorksSectionProps) {
         id={id}
         className="snap-start h-dvh flex items-center justify-center relative overflow-hidden"
       >
+        <h2 className="sr-only">Trabajos</h2>
         <div className="absolute inset-0 bg-oat" aria-hidden="true" />
         <p className="relative z-10 font-heading text-2xl sm:text-3xl md:text-4xl text-text-secondary/40 tracking-widest uppercase">
           Próximamente
         </p>
-        <SectionTitleOverlay imageSrc="/assets/animated/trabajos-title.png" />
+        <SectionTitleOverlay imageSrc="/assets/animated/trabajos-title.webp" />
       </section>
     );
   }
@@ -40,6 +41,7 @@ export default function WorksSection({ id, works }: WorksSectionProps) {
     // also shifts the sticky constraint rectangle, which would keep the title
     // pinned past the end of the group.
     <div ref={groupRef} className="grid grid-cols-1">
+      <h2 className="sr-only">Trabajos</h2>
       {/*
         Viewport-sized sticky title layer. It scrolls in with the first slide,
         pins while the group owns the screen, and is pushed out by the last one,
@@ -52,7 +54,7 @@ export default function WorksSection({ id, works }: WorksSectionProps) {
         aria-hidden="true"
       >
         <SectionTitleOverlay
-          imageSrc="/assets/animated/trabajos-title.png"
+          imageSrc="/assets/animated/trabajos-title.webp"
           targetRef={groupRef}
         />
       </div>

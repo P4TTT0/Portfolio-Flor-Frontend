@@ -173,9 +173,17 @@ export default function VideoPopup({
   const onPrevRef = useRef(onPrev);
   const onNextRef = useRef(onNext);
   const hasNextRef = useRef(hasNext);
-  onPrevRef.current = onPrev;
-  onNextRef.current = onNext;
-  hasNextRef.current = hasNext;
+
+  // Assigned in an effect, not during render: a render can be started and then
+  // thrown away (StrictMode, a concurrent re-render), and mutating a ref on that
+  // discarded pass leaves it holding a value that was never committed. Every
+  // reader below runs from a timer or an event handler, i.e. after commit, so
+  // updating here is soon enough.
+  useEffect(() => {
+    onPrevRef.current = onPrev;
+    onNextRef.current = onNext;
+    hasNextRef.current = hasNext;
+  });
 
   const navDirRef = useRef<"left" | "right">("right");
   const animatingRef = useRef(false);
@@ -199,21 +207,6 @@ export default function VideoPopup({
       behavior: "smooth",
     });
   }, [navIndex]);
-
-  useEffect(() => {
-    if (countdown === null) return;
-    if (countdown === 0) {
-      handleNavRef.current("right", onNextRef.current);
-      setCountdown(null);
-      return;
-    }
-    const timer = setTimeout(
-      () => setCountdown((c) => (c !== null && c > 0 ? c - 1 : null)),
-      1000
-    );
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [countdown]);
 
   const subscribeToYTEvents = () => {
     iframeRef.current?.contentWindow?.postMessage(
@@ -278,7 +271,31 @@ export default function VideoPopup({
   };
 
   const handleNavRef = useRef(handleNav);
-  handleNavRef.current = handleNav;
+  useEffect(() => {
+    handleNavRef.current = handleNav;
+  });
+
+  // Placed after `handleNavRef` is populated above: this reads it, and a ref has
+  // to be written before the effects that consume it.
+  //
+  // The last tick advances directly instead of parking the state at 0 and
+  // reacting to that on the next pass — the old shape spent a render showing
+  // "Siguiente en 0s" and then a second one just to clear it. Total wait is
+  // unchanged; one tick still lasts a second.
+  useEffect(() => {
+    if (countdown === null) return;
+
+    const timer = setTimeout(() => {
+      if (countdown <= 1) {
+        handleNavRef.current("right", onNextRef.current);
+        setCountdown(null);
+        return;
+      }
+      setCountdown(countdown - 1);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [countdown]);
 
   const handlePlaylistClick = (targetIndex: number) => {
     if (targetIndex === navIndex || !onNavigateTo) return;

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import type { DemoItem } from "@/lib/use-sanity-content";
+import type { DemoItem } from "@/lib/content";
 import { extractYouTubeId, getYouTubeThumbnail } from "@/lib/youtube-utils";
 import useBreakpoint from "@/hooks/useBreakpoint";
 
@@ -44,7 +44,9 @@ export default function DemoCard({ demo, index, onOpen }: DemoCardProps) {
       >
         {/* Pin — attaches card to cork board, fixed px within design canvas */}
         <img
-          src="/assets/elements/pin.png"
+          loading="lazy"
+          decoding="async"
+          src="/assets/elements/pin.webp"
           alt=""
           className="absolute z-30 pointer-events-none"
           style={{
