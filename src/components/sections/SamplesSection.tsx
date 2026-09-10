@@ -270,7 +270,7 @@ export default function SamplesSection({
       </FolderPapers>
 
       <SectionTitleOverlay
-        imageSrc="/assets/animated/muestras-title.webp"
+        imageSrc="/assets/animated/muestras-title.png"
       />
     </section>
   );

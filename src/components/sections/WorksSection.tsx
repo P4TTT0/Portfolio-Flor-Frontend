@@ -30,7 +30,7 @@ export default function WorksSection({ id, works }: WorksSectionProps) {
         <p className="relative z-10 font-heading text-2xl sm:text-3xl md:text-4xl text-text-secondary/40 tracking-widest uppercase">
           Próximamente
         </p>
-        <SectionTitleOverlay imageSrc="/assets/animated/trabajos-title.webp" />
+        <SectionTitleOverlay imageSrc="/assets/animated/trabajos-title.png" />
       </section>
     );
   }
@@ -54,7 +54,7 @@ export default function WorksSection({ id, works }: WorksSectionProps) {
         aria-hidden="true"
       >
         <SectionTitleOverlay
-          imageSrc="/assets/animated/trabajos-title.webp"
+          imageSrc="/assets/animated/trabajos-title.png"
           targetRef={groupRef}
         />
       </div>

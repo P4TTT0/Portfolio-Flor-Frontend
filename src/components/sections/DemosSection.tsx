@@ -162,7 +162,7 @@ export default function DemosSection({ id, demos }: DemosSectionProps) {
         </div>
       </div>
 
-      <SectionTitleOverlay imageSrc="/assets/animated/demos-title.webp" />
+      <SectionTitleOverlay imageSrc="/assets/animated/demos-title.png" />
 
       {openIndex !== null && (() => {
         const demo = demos[openIndex];

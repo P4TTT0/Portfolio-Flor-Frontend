@@ -88,7 +88,7 @@ export default function SocialSection({ id, social }: SocialSectionProps) {
       </div>
 
       <SectionTitleOverlay
-        imageSrc="/assets/animated/redes-title.webp"
+        imageSrc="/assets/animated/redes-title.png"
       />
     </section>
   );
