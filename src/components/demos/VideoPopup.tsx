@@ -26,8 +26,9 @@ interface VideoPopupProps {
   onNavigateTo?: (index: number) => void;
 }
 
-const TAPE_CONFIG: Record<Breakpoint, { width: number; height: number }> = {
-  mobile: { width: 48, height: 14 },
+// No mobile entry on purpose: on a phone the top of the card is the video, and
+// a strip of masking tape over it reads as a smudge rather than as tape.
+const TAPE_CONFIG: Record<Exclude<Breakpoint, "mobile">, { width: number; height: number }> = {
   tablet: { width: 56, height: 16 },
   desktop: { width: 64, height: 18 },
 };
@@ -44,9 +45,18 @@ const OVERLAY_PAD = { mobile: 16, desktop: 48 } as const;
 // padding-bottom.
 const PAPER_CHROME = LINE_H * 2 + LINE_H + LINE_H + LINE_H;
 
+// On mobile the video is lifted out of the paper and sits above it, so the
+// paper only spends its own padding: one line at the top, one at the bottom.
+const PAPER_CHROME_MOBILE = LINE_H * 2;
+
 // Floor for the video on very short screens. Below this the paper scrolls
 // instead, which is the lesser evil.
 const MIN_VIDEO_H = 120;
+
+// Mobile playlist thumbnail width. At 128px the whole item is a ~128x96 target
+// and the title survives at 12px — the previous 80px thumb forced a 9.6px
+// label, which is below what anyone can read or aim at on a phone.
+const MOBILE_THUMB_W = 128;
 
 function NavArrow({
   direction,
@@ -66,11 +76,11 @@ function NavArrow({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`${large ? "w-11 h-11" : "w-9 h-9"} rounded-full border border-neutral-300 flex items-center justify-center text-text-secondary hover:text-text-primary hover:border-neutral-500 transition-all duration-200 disabled:opacity-25 disabled:cursor-not-allowed`}
+      className={`${large ? "w-12 h-12 active:scale-95" : "w-9 h-9"} shrink-0 rounded-full border border-neutral-300 flex items-center justify-center text-text-secondary hover:text-text-primary hover:border-neutral-500 transition-all duration-200 disabled:opacity-25 disabled:cursor-not-allowed`}
       aria-label={label}
     >
       <svg
-        className={large ? "w-5 h-5" : "w-4 h-4"}
+        className={large ? "w-6 h-6" : "w-4 h-4"}
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -88,9 +98,11 @@ function NavArrow({
   );
 }
 
+// Transforms whatever wrapper is passed in. The scroll reset is the caller's
+// job: on mobile the animated wrapper and the scrolling paper are two different
+// elements, because the video sits outside the paper but must still slide.
 function animateIn(el: HTMLDivElement, direction: "left" | "right") {
   const startX = direction === "right" ? 48 : -48;
-  el.scrollTop = 0;
   el.style.transition = "none";
   el.style.transform = `translateX(${startX}px)`;
   el.style.opacity = "0";
@@ -118,6 +130,7 @@ export default function VideoPopup({
   const { breakpoint, isMobile } = useBreakpoint();
   const overlayRef = useRef<HTMLDivElement>(null);
   const paperRef = useRef<HTMLDivElement>(null);
+  const slideRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const activeItemRef = useRef<HTMLButtonElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -146,8 +159,9 @@ export default function VideoPopup({
     const measure = () => {
       const headerH = headerRef.current?.offsetHeight ?? 0;
       const chromeH = chromeRef.current?.offsetHeight ?? 0;
+      const paperChrome = isMobile ? PAPER_CHROME_MOBILE : PAPER_CHROME;
       const available =
-        window.innerHeight - overlayPad - PAPER_CHROME - headerH - chromeH;
+        window.innerHeight - overlayPad - paperChrome - headerH - chromeH;
       setVideoMaxH(Math.max(available, MIN_VIDEO_H));
     };
 
@@ -164,7 +178,7 @@ export default function VideoPopup({
       window.removeEventListener("resize", measure);
       observer.disconnect();
     };
-  }, [overlayPad]);
+  }, [overlayPad, isMobile]);
 
   const embedOrigin = useState(
     () => (typeof window !== "undefined" ? window.location.origin : "")
@@ -195,7 +209,8 @@ export default function VideoPopup({
       return;
     }
     setCountdown(null);
-    const el = paperRef.current;
+    if (paperRef.current) paperRef.current.scrollTop = 0;
+    const el = slideRef.current;
     if (el) animateIn(el, navDirRef.current);
   }, [videoId]);
 
@@ -249,7 +264,7 @@ export default function VideoPopup({
   const handleNav = (direction: "left" | "right", callback?: () => void) => {
     if (!callback || animatingRef.current) return;
     setCountdown(null);
-    const el = paperRef.current;
+    const el = slideRef.current;
     if (!el) {
       callback();
       return;
@@ -317,7 +332,6 @@ export default function VideoPopup({
     if (e.target === overlayRef.current) onClose();
   };
 
-  const tape = TAPE_CONFIG[breakpoint];
   const contentPaddingLeft = isMobile ? "44px" : "clamp(52px, 9vw, 72px)";
   const contentPaddingRight = isMobile ? "12px" : "clamp(16px, 4vw, 28px)";
   const marginLineLeft = isMobile ? "28px" : "clamp(36px, 7vw, 52px)";
@@ -325,10 +339,42 @@ export default function VideoPopup({
   // Once the video is limited by height it stops filling the paper's width, so
   // the card has to narrow with it or the paper is left with dead margins.
   // Derived from the same height budget, so it never disagrees with the video.
+  // On mobile the video is no longer inside the paper's padding, so the card
+  // takes the full overlay width and this cap does not apply.
   const cardMaxW =
-    videoMaxH === null
+    videoMaxH === null || isMobile
       ? undefined
       : `calc(${Math.round((videoMaxH * 16) / 9)}px + ${contentPaddingLeft} + ${contentPaddingRight})`;
+
+  // The paper's left padding exists to clear the notebook margin line, which is
+  // the right call for text but costs the video ~15% of the width on a phone.
+  // On mobile the video is therefore hoisted out of the paper and pinned to the
+  // top of the card at full width; the paper keeps its margin for the title.
+  const videoBlock = (
+    <div
+      className={`relative aspect-video bg-neutral-900 overflow-hidden mx-auto ${
+        isMobile ? "w-full shrink-0" : "rounded-sm shadow-md"
+      }`}
+      style={
+        videoMaxH === null
+          ? undefined
+          : // Width-driven so `aspect-video` keeps the ratio; the height
+            // budget is folded into the width instead of clamping the
+            // box, which would letterbox it.
+            { width: `min(100%, ${Math.round((videoMaxH * 16) / 9)}px)` }
+      }
+    >
+      <iframe
+        ref={iframeRef}
+        src={`${getYouTubeEmbedUrl(videoId)}${embedOrigin ? `&origin=${encodeURIComponent(embedOrigin)}` : ""}`}
+        title={title}
+        className="w-full h-full"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        onLoad={subscribeToYTEvents}
+      />
+    </div>
+  );
 
   // ── Shared playlist item renderer ──────────────────────────────────────────
   const renderSidebarItem = (item: PlaylistItem, i: number) => {
@@ -381,24 +427,27 @@ export default function VideoPopup({
         type="button"
         onClick={() => handlePlaylistClick(i)}
         disabled={isActive}
-        className={`shrink-0 flex flex-col rounded-sm overflow-hidden transition-all duration-200 ${
-          isActive ? "ring-2 ring-text-primary ring-offset-1" : "opacity-55 hover:opacity-90"
+        className={`shrink-0 snap-start flex flex-col rounded-sm overflow-hidden transition-all duration-200 ${
+          isActive ? "ring-2 ring-text-primary ring-offset-1" : "opacity-55 active:opacity-100"
         }`}
-        style={{ width: 80 }}
+        style={{ width: MOBILE_THUMB_W }}
         aria-current={isActive ? "true" : undefined}
         aria-label={`Ir a: ${item.title}`}
       >
-        <div className="relative bg-neutral-200" style={{ width: 80, height: 45 }}>
+        <div
+          className="relative bg-neutral-200"
+          style={{ width: MOBILE_THUMB_W, height: Math.round((MOBILE_THUMB_W * 9) / 16) }}
+        >
           <img src={getYouTubeThumbnail(item.videoId)} alt="" aria-hidden="true" className="w-full h-full object-cover" />
           {isActive && (
             <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-              <svg className="w-4 h-4 text-white drop-shadow-md" viewBox="0 0 24 24" fill="currentColor">
+              <svg className="w-6 h-6 text-white drop-shadow-md" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8 5v14l11-7z" />
               </svg>
             </div>
           )}
         </div>
-        <p className={`font-heading text-[0.6rem] leading-tight truncate w-full text-left px-1 pt-1 pb-1.5 ${
+        <p className={`font-heading text-xs leading-snug truncate w-full text-left px-1.5 pt-1.5 pb-2 ${
           isActive ? "text-text-primary" : "text-text-primary/70"
         }`}>
           {item.title}
@@ -425,32 +474,51 @@ export default function VideoPopup({
           className="relative flex flex-col bg-white rounded-sm shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300 flex-1 min-w-0"
           style={{ maxHeight: maxH, maxWidth: cardMaxW }}
         >
-          {/* Tape */}
-          <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
-            <span
-              className="tape-strip block rounded-sm"
-              style={{ width: tape.width, height: tape.height, transform: "rotate(-2deg)" }}
-            />
-          </div>
+          {/* Tape — comparing the breakpoint rather than reading `isMobile`
+              narrows the type, so TAPE_CONFIG needs no mobile entry. */}
+          {breakpoint !== "mobile" && (
+            <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
+              <span
+                className="tape-strip block rounded-sm"
+                style={{
+                  width: TAPE_CONFIG[breakpoint].width,
+                  height: TAPE_CONFIG[breakpoint].height,
+                  transform: "rotate(-2deg)",
+                }}
+              />
+            </div>
+          )}
 
           {/* Close button */}
           <button
             type="button"
             onClick={onClose}
-            className={`absolute top-2 right-2 z-20 ${isMobile ? "w-11 h-11" : "w-11 h-11"} flex items-center justify-center rounded-full hover:bg-neutral-100 transition-colors text-text-secondary hover:text-text-primary`}
+            // On mobile the button now sits over the video, so it carries its
+            // own scrim instead of relying on the paper behind it.
+            className={`absolute top-2 right-2 z-20 flex items-center justify-center rounded-full transition-colors ${
+              isMobile
+                ? "w-12 h-12 bg-black/45 text-white active:bg-black/70 active:scale-95"
+                : "w-11 h-11 text-text-secondary hover:bg-neutral-100 hover:text-text-primary"
+            }`}
             aria-label="Cerrar video"
           >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg className={isMobile ? "w-6 h-6" : "w-5 h-5"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
 
+          {/* Slide wrapper — everything that travels during a nav transition */}
+          <div ref={slideRef} className="flex-1 min-h-0 flex flex-col">
+
+          {/* Video — above the paper on mobile so it can use the full width */}
+          {isMobile && videoBlock}
+
           {/* Ruled paper */}
           <div
             ref={paperRef}
-            className="relative flex-1 overflow-y-auto"
+            className="relative flex-1 overflow-y-auto overscroll-contain"
             style={{
-              paddingTop: LINE_H * 2,
+              paddingTop: isMobile ? LINE_H : LINE_H * 2,
               paddingBottom: LINE_H,
               paddingLeft: contentPaddingLeft,
               paddingRight: contentPaddingRight,
@@ -470,7 +538,10 @@ export default function VideoPopup({
             />
             <div ref={headerRef}>
               <h3
-                className="font-heading text-text-primary font-semibold pr-12"
+                // The close button only overlaps the title on desktop; on mobile
+                // it floats over the video, so the reserved gutter would just
+                // be wasted width on the narrowest screen.
+                className={`font-heading text-text-primary font-semibold ${isMobile ? "" : "pr-12"}`}
                 style={{
                   fontSize: isMobile ? "1rem" : "clamp(0.95rem, 2vw, 1.2rem)",
                   lineHeight: `${LINE_H}px`,
@@ -481,35 +552,21 @@ export default function VideoPopup({
               {category && (
                 <p
                   className="font-body text-text-secondary/60 uppercase tracking-widest"
-                  style={{ fontSize: "0.6rem", lineHeight: `${LINE_H}px` }}
+                  style={{ fontSize: isMobile ? "0.7rem" : "0.6rem", lineHeight: `${LINE_H}px` }}
                 >
                   {category}
                 </p>
               )}
             </div>
-            <div style={{ height: LINE_H }} aria-hidden="true" />
-            <div
-              className="relative aspect-video bg-neutral-900 rounded-sm overflow-hidden shadow-md mx-auto"
-              style={
-                videoMaxH === null
-                  ? undefined
-                  : // Width-driven so `aspect-video` keeps the ratio; the height
-                    // budget is folded into the width instead of clamping the
-                    // box, which would letterbox it.
-                    { width: `min(100%, ${Math.round((videoMaxH * 16) / 9)}px)` }
-              }
-            >
-              <iframe
-                ref={iframeRef}
-                src={`${getYouTubeEmbedUrl(videoId)}${embedOrigin ? `&origin=${encodeURIComponent(embedOrigin)}` : ""}`}
-                title={title}
-                className="w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                onLoad={subscribeToYTEvents}
-              />
-            </div>
-            <div style={{ height: LINE_H }} aria-hidden="true" />
+            {!isMobile && (
+              <>
+                <div style={{ height: LINE_H }} aria-hidden="true" />
+                {videoBlock}
+                <div style={{ height: LINE_H }} aria-hidden="true" />
+              </>
+            )}
+          </div>
+
           </div>
 
           {/* Bars below the paper. Always rendered so the ref is stable — the
@@ -525,14 +582,18 @@ export default function VideoPopup({
                   style={{ width: `${(countdown / AUTO_ADVANCE_DELAY) * 100}%` }}
                 />
               </div>
-              <div className="px-4 py-1.5 flex items-center justify-between">
-                <span className="font-body text-xs text-text-secondary/50 select-none">
+              <div className={`flex items-center justify-between ${isMobile ? "pl-4 pr-1 py-0.5" : "px-4 py-1.5"}`}>
+                <span className={`font-body text-text-secondary/50 select-none ${isMobile ? "text-sm" : "text-xs"}`}>
                   Siguiente en {countdown}s
                 </span>
                 <button
                   type="button"
                   onClick={() => setCountdown(null)}
-                  className="font-body text-xs text-text-secondary/50 hover:text-text-primary transition-colors underline underline-offset-2 decoration-text-secondary/30"
+                  // Padding rather than a bare link: on a phone this is the
+                  // escape hatch from an auto-advance already counting down.
+                  className={`font-body text-text-secondary/50 hover:text-text-primary transition-colors underline underline-offset-2 decoration-text-secondary/30 ${
+                    isMobile ? "text-sm px-4 py-2.5" : "text-xs"
+                  }`}
                 >
                   Cancelar
                 </button>
@@ -542,7 +603,7 @@ export default function VideoPopup({
 
           {/* Nav bar */}
           {hasNav && (
-            <div className="px-4 py-3 flex items-center justify-between border-t border-neutral-100 bg-white">
+            <div className={`flex items-center justify-between border-t border-neutral-100 bg-white ${isMobile ? "px-3 py-2.5" : "px-4 py-3"}`}>
               <NavArrow
                 direction="left"
                 onClick={() => handleNav("left", onPrev)}
@@ -551,7 +612,7 @@ export default function VideoPopup({
                 large={isMobile}
               />
               {navIndex !== undefined && navTotal !== undefined && (
-                <span className="font-body text-xs tracking-widest text-text-secondary/40 uppercase select-none">
+                <span className={`font-body tracking-widest text-text-secondary/40 uppercase select-none ${isMobile ? "text-sm" : "text-xs"}`}>
                   {navIndex + 1} / {navTotal}
                 </span>
               )}
@@ -569,12 +630,17 @@ export default function VideoPopup({
           {showMobilePlaylist && (
             <div className="border-t border-neutral-100 bg-white">
               <div className="px-3 pt-2 pb-0.5">
-                <p className="font-body text-[0.55rem] tracking-widest text-text-secondary/40 uppercase">
+                <p className="font-body text-[0.65rem] tracking-widest text-text-secondary/40 uppercase">
                   Playlist
                 </p>
               </div>
-              <div className="overflow-x-auto pt-2 pb-3">
-                <div className="flex gap-2 px-3 w-max">
+              <div
+                className="overflow-x-auto pt-2 pb-3 snap-x snap-mandatory"
+                // Claims horizontal panning so the strip never competes with
+                // the page's vertical scroll for the same gesture.
+                style={{ touchAction: "pan-x" }}
+              >
+                <div className="flex gap-2.5 px-3 w-max">
                   {playlist!.map((item, i) => renderMobileItem(item, i))}
                 </div>
               </div>
