@@ -38,10 +38,10 @@ export default function TrackList({
     <div
       className="flex-1 min-h-0 overflow-y-auto overscroll-behavior-contain px-2 sm:px-4"
       style={{ touchAction: "pan-y" }}
-      role="list"
-      aria-label="Lista de tracks"
     >
-      <div className="flex flex-col gap-0.5 py-2">
+      {/* role="list" sits on the direct parent of the items: an intermediate
+          element without role="listitem" breaks the list relationship. */}
+      <div className="flex flex-col gap-0.5 py-2" role="list" aria-label="Lista de tracks">
         {tracks.map((track) => {
           const hasAudio = !!track.audioUrl;
           const isThisActive = activeTrackUrl === track.audioUrl && hasAudio;
@@ -51,6 +51,7 @@ export default function TrackList({
             <div
               key={track.title || track.audioUrl}
               ref={isThisActive ? activeItemRef : undefined}
+              role="listitem"
             >
               <TrackItem
                 title={track.title}

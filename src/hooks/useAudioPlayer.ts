@@ -11,11 +11,14 @@ export interface UseAudioPlayerReturn {
   currentTime: number;
   duration: number;
   peaks: number[]; // normalised 0–1 amplitude values
-  volume: number; // 0–1
+  volume: number; // 0–1, reads 0 while muted
+  isMuted: boolean;
   play: () => void;
   pause: () => void;
   seek: (fraction: number) => void;
   setVolume: (v: number) => void;
+  /** Silences output and back, remembering the level to restore. */
+  toggleMute: () => void;
   loading: boolean;
   error: string | null;
 }
@@ -80,12 +83,15 @@ export function useAudioPlayer(audioUrl: string, onEnded?: () => void): UseAudio
   const rafRef = useRef<number>(0);
   const isPlayingRef = useRef(false);
   const volumeRef = useRef(0.8);
+  /** Level to come back to when unmuting — never overwritten with 0. */
+  const lastAudibleVolumeRef = useRef(0.8);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [peaks, setPeaks] = useState<number[]>(() => peaksCache.get(audioUrl) ?? []);
   const [volume, setVolumeState] = useState(0.8);
+  const [isMuted, setIsMuted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -350,14 +356,51 @@ export function useAudioPlayer(audioUrl: string, onEnded?: () => void): UseAudio
     };
   }, [audioUrl, getCtx, stopSource]);
 
-  const setVolume = useCallback((v: number) => {
-    const clamped = Math.max(0, Math.min(1, v));
-    volumeRef.current = clamped;
-    setVolumeState(clamped);
-    if (gainNodeRef.current) {
-      gainNodeRef.current.gain.value = clamped;
+  /**
+   * Push a level to the gain node. Stepping gain discontinuously produces an
+   * audible click ("zipper noise"), so when the graph is live the change is
+   * ramped over a few milliseconds instead of assigned.
+   */
+  const applyVolume = useCallback((v: number) => {
+    volumeRef.current = v;
+    setVolumeState(v);
+
+    const gain = gainNodeRef.current;
+    const ctx = audioContextRef.current;
+    if (!gain) return;
+
+    if (ctx) {
+      const now = ctx.currentTime;
+      gain.gain.cancelScheduledValues(now);
+      gain.gain.setValueAtTime(gain.gain.value, now);
+      gain.gain.linearRampToValueAtTime(v, now + 0.04);
+    } else {
+      gain.gain.value = v;
     }
   }, []);
+
+  const setVolume = useCallback(
+    (v: number) => {
+      const clamped = Math.max(0, Math.min(1, v));
+      // Moving the slider is an explicit choice about level: it overrides mute,
+      // and any audible level becomes the one the mute toggle restores.
+      if (clamped > 0) lastAudibleVolumeRef.current = clamped;
+      setIsMuted(clamped === 0);
+      applyVolume(clamped);
+    },
+    [applyVolume],
+  );
+
+  const toggleMute = useCallback(() => {
+    if (isMuted || volumeRef.current === 0) {
+      applyVolume(lastAudibleVolumeRef.current || 0.8);
+      setIsMuted(false);
+      return;
+    }
+    lastAudibleVolumeRef.current = volumeRef.current;
+    setIsMuted(true);
+    applyVolume(0);
+  }, [isMuted, applyVolume]);
 
   // --- lifecycle ---
 
@@ -378,10 +421,12 @@ export function useAudioPlayer(audioUrl: string, onEnded?: () => void): UseAudio
     duration,
     peaks,
     volume,
+    isMuted,
     play,
     pause,
     seek,
     setVolume,
+    toggleMute,
     loading,
     error,
   };
